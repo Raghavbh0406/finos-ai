@@ -10,54 +10,68 @@ import java.util.List;
 @RequestMapping("/api/expenses")
 public class ExpenseController {
 
-    private final ExpenseService expenseService;
 
-    public ExpenseController(
-            ExpenseService expenseService) {
+private final ExpenseService expenseService;
 
-        this.expenseService = expenseService;
-    }
+public ExpenseController(
+        ExpenseService expenseService) {
 
-    @PostMapping
-    public Expense createExpense(
-            @RequestBody ExpenseRequest request,
-            Authentication authentication) {
+    this.expenseService = expenseService;
+}
 
-        return expenseService.createExpense(
-                request,
-                authentication.getName()
-        );
-    }
+@PostMapping
+public Expense createExpense(
+        @RequestBody ExpenseRequest request,
+        Authentication authentication) {
 
-    @GetMapping
-    public List<Expense> getMyExpenses(
-            Authentication authentication) {
+    return expenseService.createExpense(
+            request,
+            authentication.getName()
+    );
+}
 
-        return expenseService.getExpensesByUser(
-                authentication.getName()
-        );
-    }
+@GetMapping
+public List<Expense> getMyExpenses(
+        Authentication authentication) {
 
-    @GetMapping("/{id}")
-    public Expense getExpenseById(
-            @PathVariable Long id) {
+    return expenseService.getExpensesByUser(
+            authentication.getName()
+    );
+}
 
-        return expenseService.getExpenseById(id);
-    }
+@GetMapping("/{id}")
+public Expense getExpenseById(
+        @PathVariable Long id) {
 
-    @DeleteMapping("/{id}")
-    public void deleteExpense(
-            @PathVariable Long id) {
+    return expenseService.getExpenseById(id);
+}
 
-        expenseService.deleteExpense(id);
-    }
+@PutMapping("/{id}")
+public Expense updateExpense(
+        @PathVariable Long id,
+        @RequestBody ExpenseRequest request) {
 
-    @GetMapping("/total")
-    public Double getTotalExpenses(
-            Authentication authentication) {
+    return expenseService.updateExpense(
+            id,
+            request
+    );
+}
 
-        return expenseService.getTotalExpenses(
-                authentication.getName()
-        );
-    }
+@DeleteMapping("/{id}")
+public void deleteExpense(
+        @PathVariable Long id) {
+
+    expenseService.deleteExpense(id);
+}
+
+@GetMapping("/total")
+public Double getTotalExpenses(
+        Authentication authentication) {
+
+    return expenseService.getTotalExpenses(
+            authentication.getName()
+    );
+}
+
+
 }

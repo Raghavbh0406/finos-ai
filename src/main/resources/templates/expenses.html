@@ -4,7 +4,12 @@
 
 <head>
     <title>Expenses - FinOS AI</title>
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+
+<link rel="stylesheet"
+      href="/css/dashboard.css">
+
+
 </head>
 
 <body>
@@ -31,30 +36,33 @@
 
 <div class="card">
 
-    <h3>Add Expense</h3>
+    <h3>Add / Edit Expense</h3>
 
     <br>
 
-    <input id="title"
-           type="text"
-           placeholder="Title">
+    <input
+            id="title"
+            type="text"
+            placeholder="Title">
 
     <br><br>
 
-    <input id="amount"
-           type="number"
-           placeholder="Amount">
+    <input
+            id="amount"
+            type="number"
+            placeholder="Amount">
 
     <br><br>
 
-    <input id="category"
-           type="text"
-           placeholder="Category">
+    <input
+            id="category"
+            type="text"
+            placeholder="Category">
 
     <br><br>
 
     <button onclick="addExpense()">
-        Add Expense
+        Save Expense
     </button>
 
 </div>
@@ -70,12 +78,15 @@
     <table id="expenseTable">
 
         <thead>
+
         <tr>
-    <th>Title</th>
-    <th>Amount</th>
-    <th>Category</th>
-    <th>Action</th>
-</tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+
         </thead>
 
         <tbody>
@@ -88,7 +99,7 @@
 
 </div>
 
-<script th:src="@{/js/expenses.js}"></script>
+<script src="/js/expenses.js"></script>
 
 </body>
 </html>

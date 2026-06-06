@@ -10,75 +10,104 @@ import java.util.List;
 @Service
 public class ExpenseService {
 
-    private final ExpenseRepository expenseRepository;
-    private final UserRepository userRepository;
 
-    public ExpenseService(
-            ExpenseRepository expenseRepository,
-            UserRepository userRepository) {
+private final ExpenseRepository expenseRepository;
+private final UserRepository userRepository;
 
-        this.expenseRepository = expenseRepository;
-        this.userRepository = userRepository;
+public ExpenseService(
+        ExpenseRepository expenseRepository,
+        UserRepository userRepository) {
+
+    this.expenseRepository = expenseRepository;
+    this.userRepository = userRepository;
+}
+
+public Expense createExpense(
+        ExpenseRequest request,
+        String email) {
+
+    User user =
+            userRepository.findByEmail(email);
+
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public Expense createExpense(
-            ExpenseRequest request,
-            String email) {
+    Expense expense = new Expense();
 
-        User user =
-                userRepository.findByEmail(email);
+    expense.setTitle(request.getTitle());
+    expense.setAmount(request.getAmount());
+    expense.setCategory(request.getCategory());
+    expense.setDate(request.getDate());
+    expense.setUser(user);
 
-        if (user == null) {
-            throw new RuntimeException(
-                    "User not found"
-            );
-        }
+    return expenseRepository.save(expense);
+}
 
-        Expense expense = new Expense();
+public List<Expense> getExpensesByUser(
+        String email) {
 
-        expense.setTitle(request.getTitle());
-        expense.setAmount(request.getAmount());
-        expense.setCategory(request.getCategory());
-        expense.setDate(request.getDate());
-        expense.setUser(user);
+    User user =
+            userRepository.findByEmail(email);
 
-        return expenseRepository.save(expense);
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public List<Expense> getExpensesByUser(
-            String email) {
+    return expenseRepository.findByUser(user);
+}
 
-        User user =
-                userRepository.findByEmail(email);
+public Double getTotalExpenses(
+        String email) {
 
-        if (user == null) {
-            throw new RuntimeException(
-                    "User not found"
-            );
-        }
+    return getExpensesByUser(email)
+            .stream()
+            .mapToDouble(Expense::getAmount)
+            .sum();
+}
 
-        return expenseRepository.findByUser(user);
-    }
+public Expense getExpenseById(Long id) {
 
-    public Double getTotalExpenses(
-            String email) {
+    return expenseRepository.findById(id)
+            .orElseThrow(() ->
+                    new RuntimeException(
+                            "Expense not found"
+                    ));
+}
 
-        return getExpensesByUser(email)
-                .stream()
-                .mapToDouble(Expense::getAmount)
-                .sum();
-    }
+public Expense updateExpense(
+        Long id,
+        ExpenseRequest request) {
 
-    public Expense getExpenseById(Long id) {
+    Expense expense =
+            expenseRepository.findById(id)
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Expense not found"
+                            ));
 
-        return expenseRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Expense not found"
-                        ));
-    }
+    expense.setTitle(
+            request.getTitle());
 
-    public void deleteExpense(Long id) {
-        expenseRepository.deleteById(id);
-    }
+    expense.setAmount(
+            request.getAmount());
+
+    expense.setCategory(
+            request.getCategory());
+
+    expense.setDate(
+            request.getDate());
+
+    return expenseRepository.save(expense);
+}
+
+public void deleteExpense(Long id) {
+    expenseRepository.deleteById(id);
+}
+
+
 }
