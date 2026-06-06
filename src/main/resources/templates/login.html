@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>FinOS AI Login</title>
-
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
@@ -18,30 +18,81 @@
             Smart Personal Finance Management
         </p>
 
-        <form>
+        <input
+                type="email"
+                id="email"
+                placeholder="Enter Email">
 
-            <input
-                    type="email"
-                    placeholder="Enter Email"
-                    required>
+        <input
+                type="password"
+                id="password"
+                placeholder="Enter Password">
 
-            <input
-                    type="password"
-                    placeholder="Enter Password"
-                    required>
+        <button onclick="login()">
+            Login
+        </button>
 
-            <button type="submit">
-                Login
-            </button>
-            <a href="/register">
-                Create Account
-            </a>
+        <br><br>
 
-        </form>
+        <a href="/register">
+            Create Account
+        </a>
 
     </div>
 
 </div>
+
+<script>
+
+async function login() {
+
+    const email =
+        document.getElementById("email").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    const response =
+        await fetch(
+            "/api/users/login",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            }
+        );
+
+    if (response.ok) {
+
+        const data =
+            await response.json();
+
+        localStorage.setItem(
+            "token",
+            data.token
+        );
+
+        window.location.href =
+            "/dashboard-page";
+
+    } else {
+
+        alert(
+            "Invalid Email or Password"
+        );
+
+    }
+}
+
+</script>
 
 </body>
 </html>
