@@ -10,58 +10,90 @@ import java.util.List;
 @Service
 public class IncomeService {
 
-    private final IncomeRepository repository;
-    private final UserRepository userRepository;
 
-    public IncomeService(
-            IncomeRepository repository,
-            UserRepository userRepository) {
+private final IncomeRepository repository;
+private final UserRepository userRepository;
 
-        this.repository = repository;
-        this.userRepository = userRepository;
+public IncomeService(
+        IncomeRepository repository,
+        UserRepository userRepository) {
+
+    this.repository = repository;
+    this.userRepository = userRepository;
+}
+
+public Income createIncome(
+        IncomeRequest request,
+        String email) {
+
+    User user =
+            userRepository.findByEmail(email);
+
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public Income createIncome(
-            IncomeRequest request,
-            String email) {
+    Income income = new Income();
 
-        User user =
-                userRepository.findByEmail(email);
+    income.setSource(
+            request.getSource());
 
-        if (user == null) {
-            throw new RuntimeException(
-                    "User not found"
-            );
-        }
+    income.setAmount(
+            request.getAmount());
 
-        Income income = new Income();
+    income.setDate(
+            request.getDate());
 
-        income.setSource(
-                request.getSource());
+    income.setUser(user);
 
-        income.setAmount(
-                request.getAmount());
+    return repository.save(income);
+}
 
-        income.setDate(
-                request.getDate());
+public List<Income> getIncomeByUser(
+        String email) {
 
-        income.setUser(user);
+    User user =
+            userRepository.findByEmail(email);
 
-        return repository.save(income);
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public List<Income> getIncomeByUser(
-            String email) {
+    return repository.findByUser(user);
+}
 
-        User user =
-                userRepository.findByEmail(email);
+public Income updateIncome(
+        Long id,
+        IncomeRequest request) {
 
-        if (user == null) {
-            throw new RuntimeException(
-                    "User not found"
-            );
-        }
+    Income income =
+            repository.findById(id)
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Income not found"
+                            ));
 
-        return repository.findByUser(user);
-    }
+    income.setSource(
+            request.getSource());
+
+    income.setAmount(
+            request.getAmount());
+
+    income.setDate(
+            request.getDate());
+
+    return repository.save(income);
+}
+
+public void deleteIncome(
+        Long id) {
+
+    repository.deleteById(id);
+}
+
+
 }

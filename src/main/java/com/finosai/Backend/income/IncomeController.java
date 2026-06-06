@@ -10,31 +10,49 @@ import java.util.List;
 @RequestMapping("/api/income")
 public class IncomeController {
 
-    private final IncomeService service;
 
-    public IncomeController(
-            IncomeService service) {
+private final IncomeService service;
 
-        this.service = service;
-    }
+public IncomeController(
+        IncomeService service) {
 
-    @PostMapping
-    public Income createIncome(
-            @RequestBody IncomeRequest request,
-            Authentication authentication) {
+    this.service = service;
+}
 
-        return service.createIncome(
-                request,
-                authentication.getName()
-        );
-    }
+@PostMapping
+public Income createIncome(
+        @RequestBody IncomeRequest request,
+        Authentication authentication) {
 
-    @GetMapping
-    public List<Income> getMyIncome(
-            Authentication authentication) {
+    return service.createIncome(
+            request,
+            authentication.getName()
+    );
+}
 
-        return service.getIncomeByUser(
-                authentication.getName()
-        );
-    }
+@GetMapping
+public List<Income> getMyIncome(
+        Authentication authentication) {
+
+    return service.getIncomeByUser(
+            authentication.getName()
+    );
+}
+
+@PutMapping("/{id}")
+public Income updateIncome(
+        @PathVariable Long id,
+        @RequestBody IncomeRequest request) {
+
+    return service.updateIncome(id, request);
+}
+
+@DeleteMapping("/{id}")
+public void deleteIncome(
+        @PathVariable Long id) {
+
+    service.deleteIncome(id);
+}
+
+
 }
