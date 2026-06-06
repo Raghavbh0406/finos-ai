@@ -36,12 +36,14 @@ async function loadExpenses() {
                 document.createElement("tr");
 
             row.innerHTML =
-    "<td>" + expense.title + "</td>" +
-    "<td>₹" + expense.amount + "</td>" +
-    "<td>" + expense.category + "</td>" +
-    "<td><button onclick='deleteExpense(" +
-    expense.id +
-    ")'>Delete</button></td>";
+                "<td>" + expense.title + "</td>" +
+                "<td>₹" + expense.amount + "</td>" +
+                "<td>" + expense.category + "</td>" +
+                "<td>" + expense.date + "</td>" +
+                "<td><button onclick='deleteExpense(" +
+                expense.id +
+                ")'>Delete</button></td>";
+
             tbody.appendChild(row);
 
         });
@@ -113,23 +115,34 @@ async function addExpense() {
 
         alert("Failed to add expense");
     }
-    async function deleteExpense(id) {
+}
+
+async function deleteExpense(id) {
 
     const token =
         localStorage.getItem("token");
 
     try {
 
-        await fetch(
-            "/api/expenses/" + id,
-            {
-                method: "DELETE",
-                headers: {
-                    "Authorization":
-                        "Bearer " + token
+        const response =
+            await fetch(
+                "/api/expenses/" + id,
+                {
+                    method: "DELETE",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
                 }
-            }
-        );
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Delete failed"
+            );
+        }
 
         loadExpenses();
 
@@ -137,6 +150,6 @@ async function addExpense() {
 
         console.error(error);
 
+        alert("Failed to delete expense");
     }
-}
 }
