@@ -1,0 +1,105 @@
+package com.finosai.Backend.report;
+
+import com.finosai.Backend.budget.Budget;
+import com.finosai.Backend.budget.BudgetRepository;
+import com.finosai.Backend.entity.User;
+import com.finosai.Backend.expense.Expense;
+import com.finosai.Backend.expense.ExpenseRepository;
+import com.finosai.Backend.repository.UserRepository;
+import com.finosai.Backend.streak.StreakService;
+import com.finosai.Backend.streak.StreakResponse;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class WeeklyReportService {
+
+    private final ExpenseRepository expenseRepository;
+    private final BudgetRepository budgetRepository;
+    private final UserRepository userRepository;
+    private final JavaMailSender mailSender;
+    private final StreakService streakService;
+
+    public WeeklyReportService(
+            ExpenseRepository expenseRepository,
+            BudgetRepository budgetRepository,
+            UserRepository userRepository,
+            JavaMailSender mailSender,
+            StreakService streakService) {
+
+        this.expenseRepository = expenseRepository;
+        this.budgetRepository = budgetRepository;
+        this.userRepository = userRepository;
+        this.mailSender = mailSender;
+        this.streakService = streakService;
+    }
+
+    public void sendWeeklyReports() {
+
+        List<User> users = userRepository.findAll();
+
+        List<Expense> expenses = expenseRepository.findAll();
+
+        double totalSpent = expenses.stream()
+                .mapToDouble(Expense::getAmount)
+                .sum();
+
+        double highestExpense = expenses.stream()
+                .mapToDouble(Expense::getAmount)
+                .max()
+                .orElse(0);
+
+        StreakResponse streak =
+        new StreakResponse(0);
+
+        Optional<Budget> budget =
+                budgetRepository.findAll()
+                        .stream()
+                        .findFirst();
+
+        double budgetUsage = 0;
+
+        if (budget.isPresent()) {
+
+            budgetUsage =
+                    (totalSpent /
+                            budget.get().getLimitAmount()) * 100;
+        }
+
+        for (User user : users) {
+
+            SimpleMailMessage mail =
+                    new SimpleMailMessage();
+
+            mail.setTo(user.getEmail());
+
+            mail.setSubject(
+                    "FinOS AI Weekly Financial Report");
+
+            mail.setText(
+                    "📊 Weekly Financial Report\n\n" +
+
+                    "Total Expenses: ₹" + totalSpent + "\n\n" +
+
+                    "Highest Expense: ₹" + highestExpense + "\n\n" +
+
+                    "Budget Usage: " +
+                    String.format("%.1f", budgetUsage) +
+                    "%\n\n" +
+
+                    "🔥 Current Streak: " +
+                    streak.getCurrentStreak() +
+                    " Days\n\n" +
+
+                    "AI Recommendation:\n" +
+                    "Your highest spending category deserves attention. Review your expenses and look for saving opportunities."
+            );
+
+            mailSender.send(mail);
+        }
+    }
+}

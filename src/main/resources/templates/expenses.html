@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Expenses - FinOS AI</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+<div class="sidebar">
+
+
+<h2>FinOS AI</h2>
+
+<a href="/dashboard-page">Dashboard</a>
+<a href="/income-page">Income</a>
+<a href="/expenses-page">Expenses</a>
+<a href="/budgets-page">Budgets</a>
+<a href="/investments-page">Investments</a>
+<a href="/savings-page">Savings Goals</a>
+
+
+</div>
+
+<div class="main-content">
+
+
+<h1>Expenses</h1>
+
+<div class="card">
+
+    <h3>Add Expense</h3>
+
+    <br>
+
+    <input id="title"
+           type="text"
+           placeholder="Title">
+
+    <br><br>
+
+    <input id="amount"
+           type="number"
+           placeholder="Amount">
+
+    <br><br>
+
+    <input id="category"
+           type="text"
+           placeholder="Category">
+
+    <br><br>
+
+    <button onclick="addExpense()">
+        Add Expense
+    </button>
+
+</div>
+
+<br>
+
+<div class="card">
+
+    <h3>Expense List</h3>
+
+    <br>
+
+    <table id="expenseTable">
+
+        <thead>
+        <tr>
+    <th>Title</th>
+    <th>Amount</th>
+    <th>Category</th>
+    <th>Action</th>
+</tr>
+        </thead>
+
+        <tbody>
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</div>
+
+<script th:src="@{/js/expenses.js}"></script>
+
+</body>
+</html>

@@ -4,6 +4,7 @@ import com.finosai.Backend.dto.LoginRequest;
 import com.finosai.Backend.dto.LoginResponse;
 import com.finosai.Backend.entity.User;
 import com.finosai.Backend.repository.UserRepository;
+import com.finosai.Backend.security.JwtService;
 import com.finosai.Backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +16,16 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final UserService userService;
+    private final JwtService jwtService;
 
-    public UserController(UserRepository userRepository, UserService userService) {
+    public UserController(
+            UserRepository userRepository,
+            UserService userService,
+            JwtService jwtService) {
+
         this.userRepository = userRepository;
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping
@@ -39,10 +46,16 @@ public class UserController {
                 request.getPassword()
         );
 
+        String token = jwtService.generateToken(user.getEmail());
+
         return new LoginResponse(
-                user.getId(),
-                user.getName(),
+                token,
                 user.getEmail()
         );
+    }
+
+    @GetMapping("/extract")
+    public String extractEmail(@RequestParam String token) {
+        return jwtService.extractEmail(token);
     }
 }

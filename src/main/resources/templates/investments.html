@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Investments - FinOS AI</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2>FinOS AI</h2>
+
+    <a href="/dashboard-page">Dashboard</a>
+    <a href="/income-page">Income</a>
+    <a href="/expenses-page">Expenses</a>
+    <a href="/budgets-page">Budgets</a>
+    <a href="/investments-page">Investments</a>
+    <a href="/savings-page">Savings Goals</a>
+
+</div>
+
+<div class="main-content">
+
+    <h1>Investments</h1>
+
+    <div class="card">
+
+        <h3>Add Investment</h3>
+
+        <br>
+
+        <input
+                id="investmentType"
+                type="text"
+                placeholder="Investment Type (Stock, MF, FD...)">
+
+        <br><br>
+
+        <input
+                id="investmentName"
+                type="text"
+                placeholder="Investment Name">
+
+        <br><br>
+
+        <input
+                id="investedAmount"
+                type="number"
+                placeholder="Invested Amount">
+
+        <br><br>
+
+        <input
+                id="currentValue"
+                type="number"
+                placeholder="Current Value">
+
+        <br><br>
+
+        <button onclick="createInvestment()">
+            Add Investment
+        </button>
+
+    </div>
+
+    <br>
+
+    <div class="card">
+
+        <h3>Investment Portfolio</h3>
+
+        <br>
+
+        <table id="investmentTable">
+
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Invested</th>
+                <th>Current</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script th:src="@{/js/investments.js}"></script>
+
+</body>
+</html>

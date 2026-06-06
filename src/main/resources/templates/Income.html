@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Income - FinOS AI</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2>FinOS AI</h2>
+
+    <a href="/dashboard-page">Dashboard</a>
+    <a href="/income-page">Income</a>
+    <a href="/expenses-page">Expenses</a>
+    <a href="/budgets-page">Budgets</a>
+    <a href="/investments-page">Investments</a>
+    <a href="/savings-page">Savings Goals</a>
+
+</div>
+
+<div class="main-content">
+
+    <h1>Income</h1>
+
+    <div class="card">
+
+        <h3>Add Income</h3>
+
+        <br>
+
+        <input
+                id="source"
+                type="text"
+                placeholder="Income Source">
+
+        <br><br>
+
+        <input
+                id="amount"
+                type="number"
+                placeholder="Amount">
+
+        <br><br>
+
+        <input
+                id="date"
+                type="date">
+
+        <br><br>
+
+        <button onclick="addIncome()">
+            Add Income
+        </button>
+
+    </div>
+
+    <br>
+
+    <div class="card">
+
+        <h3>Income List</h3>
+
+        <br>
+
+        <table id="incomeTable">
+
+            <thead>
+
+            <tr>
+                <th>Source</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script th:src="@{/js/income.js}"></script>
+
+</body>
+</html>

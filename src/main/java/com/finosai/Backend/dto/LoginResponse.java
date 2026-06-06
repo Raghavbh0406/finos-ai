@@ -2,22 +2,16 @@ package com.finosai.Backend.dto;
 
 public class LoginResponse {
 
-    private Long id;
-    private String name;
+    private String token;
     private String email;
 
-    public LoginResponse(Long id, String name, String email) {
-        this.id = id;
-        this.name = name;
+    public LoginResponse(String token, String email) {
+        this.token = token;
         this.email = email;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
+    public String getToken() {
+        return token;
     }
 
     public String getEmail() {
