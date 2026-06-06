@@ -53,6 +53,10 @@ public class UserController {
                 user.getEmail()
         );
     }
+    @GetMapping("/register-page")
+public String registerPage() {
+    return "register";
+}
 
     @GetMapping("/extract")
     public String extractEmail(@RequestParam String token) {

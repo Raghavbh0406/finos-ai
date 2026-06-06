@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - FinOS AI</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+
+<div class="login-container">
+
+    <h1>FinOS AI</h1>
+    <h3>Create Account</h3>
+
+    <input
+        type="text"
+        id="name"
+        placeholder="Enter Name">
+
+    <input
+        type="email"
+        id="email"
+        placeholder="Enter Email">
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Enter Password">
+
+    <button onclick="register()">
+        Register
+    </button>
+
+    <br><br>
+
+    <a href="/">
+        Already have an account? Login
+    </a>
+
+</div>
+
+<script>
+
+async function register() {
+
+    const name =
+        document.getElementById("name").value;
+
+    const email =
+        document.getElementById("email").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    const response =
+        await fetch(
+            "/api/users",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password
+                })
+            }
+        );
+
+    if (response.ok) {
+
+        alert("Registration Successful");
+
+        window.location.href = "/";
+
+    } else {
+
+        alert("Registration Failed");
+
+    }
+}
+
+</script>
+
+</body>
+</html>
