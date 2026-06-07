@@ -3,6 +3,8 @@ document.addEventListener(
     loadBudgets
 );
 
+let editingId = null;
+
 async function loadBudgets() {
 
     const token =
@@ -10,15 +12,16 @@ async function loadBudgets() {
 
     try {
 
-        const response = await fetch(
-            "/api/budgets",
-            {
-                headers: {
-                    "Authorization":
-                        "Bearer " + token
+        const response =
+            await fetch(
+                "/api/budgets",
+                {
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
                 }
-            }
-        );
+            );
 
         const budgets =
             await response.json();
@@ -30,17 +33,24 @@ async function loadBudgets() {
 
         tbody.innerHTML = "";
 
-        budgets.forEach(function(budget) {
+        budgets.forEach(budget => {
 
-            const row =
-                document.createElement("tr");
+            tbody.innerHTML += `
+                <tr>
+                    <td>${budget.category}</td>
+                    <td>₹${budget.limitAmount}</td>
 
-            row.innerHTML =
-                "<td>" + budget.category + "</td>" +
-                "<td>₹" + budget.limitAmount + "</td>";
+                    <td>
+                        <button onclick="editBudget(${budget.id})">
+                            Edit
+                        </button>
 
-            tbody.appendChild(row);
-
+                        <button onclick="deleteBudget(${budget.id})">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `;
         });
 
     } catch (error) {
@@ -50,47 +60,84 @@ async function loadBudgets() {
     }
 }
 
-async function createBudget() {
+async function saveBudget() {
 
     const token =
         localStorage.getItem("token");
 
-    const category =
-        document.getElementById(
-            "category"
-        ).value;
+    const budget = {
 
-    const limitAmount =
-        document.getElementById(
-            "limitAmount"
-        ).value;
+        category:
+            document.getElementById(
+                "category"
+            ).value,
+
+        limitAmount:
+            Number(
+                document.getElementById(
+                    "limitAmount"
+                ).value
+            )
+    };
 
     try {
 
-        const response = await fetch(
-            "/api/budgets",
-            {
-                method: "POST",
+        let response;
 
-                headers: {
-                    "Content-Type":
-                        "application/json",
+        if (editingId !== null) {
 
-                    "Authorization":
-                        "Bearer " + token
-                },
+            response =
+                await fetch(
+                    "/api/budgets/" +
+                    editingId,
+                    {
+                        method: "PUT",
 
-                body: JSON.stringify({
-                    category: category,
-                    limitAmount: limitAmount
-                })
-            }
-        );
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                "Bearer " + token
+                        },
+
+                        body:
+                            JSON.stringify(
+                                budget
+                            )
+                    }
+                );
+
+            editingId = null;
+
+        } else {
+
+            response =
+                await fetch(
+                    "/api/budgets",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                "Bearer " + token
+                        },
+
+                        body:
+                            JSON.stringify(
+                                budget
+                            )
+                    }
+                );
+        }
 
         if (!response.ok) {
 
             throw new Error(
-                "Failed to create budget"
+                "Save failed"
             );
         }
 
@@ -109,7 +156,86 @@ async function createBudget() {
         console.error(error);
 
         alert(
-            "Failed to create budget"
+            "Failed to save budget"
+        );
+    }
+}
+
+async function editBudget(id) {
+
+    const token =
+        localStorage.getItem("token");
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/budgets/" + id,
+                {
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+        const budget =
+            await response.json();
+
+        editingId = id;
+
+        document.getElementById(
+            "category"
+        ).value =
+            budget.category;
+
+        document.getElementById(
+            "limitAmount"
+        ).value =
+            budget.limitAmount;
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+async function deleteBudget(id) {
+
+    const token =
+        localStorage.getItem("token");
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/budgets/" + id,
+                {
+                    method: "DELETE",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Delete failed"
+            );
+        }
+
+        loadBudgets();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Failed to delete budget"
         );
     }
 }

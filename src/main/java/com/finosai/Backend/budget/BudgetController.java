@@ -10,31 +10,59 @@ import java.util.List;
 @RequestMapping("/api/budgets")
 public class BudgetController {
 
-    private final BudgetService budgetService;
 
-    public BudgetController(
-            BudgetService budgetService) {
+private final BudgetService budgetService;
 
-        this.budgetService = budgetService;
-    }
+public BudgetController(
+        BudgetService budgetService) {
 
-    @PostMapping
-    public Budget createBudget(
-            @RequestBody BudgetRequest request,
-            Authentication authentication) {
+    this.budgetService = budgetService;
+}
 
-        return budgetService.createBudget(
-                request,
-                authentication.getName()
-        );
-    }
+@PostMapping
+public Budget createBudget(
+        @RequestBody BudgetRequest request,
+        Authentication authentication) {
 
-    @GetMapping
-    public List<Budget> getMyBudgets(
-            Authentication authentication) {
+    return budgetService.createBudget(
+            request,
+            authentication.getName()
+    );
+}
 
-        return budgetService.getBudgetsByUser(
-                authentication.getName()
-        );
-    }
+@GetMapping
+public List<Budget> getMyBudgets(
+        Authentication authentication) {
+
+    return budgetService.getBudgetsByUser(
+            authentication.getName()
+    );
+}
+
+@GetMapping("/{id}")
+public Budget getBudgetById(
+        @PathVariable Long id) {
+
+    return budgetService.getBudgetById(id);
+}
+
+@PutMapping("/{id}")
+public Budget updateBudget(
+        @PathVariable Long id,
+        @RequestBody BudgetRequest request) {
+
+    return budgetService.updateBudget(
+            id,
+            request
+    );
+}
+
+@DeleteMapping("/{id}")
+public void deleteBudget(
+        @PathVariable Long id) {
+
+    budgetService.deleteBudget(id);
+}
+
+
 }

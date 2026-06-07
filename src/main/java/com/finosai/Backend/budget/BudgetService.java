@@ -10,47 +10,102 @@ import java.util.List;
 @Service
 public class BudgetService {
 
-    private final BudgetRepository budgetRepository;
-    private final UserRepository userRepository;
 
-    public BudgetService(
-            BudgetRepository budgetRepository,
-            UserRepository userRepository) {
+private final BudgetRepository budgetRepository;
+private final UserRepository userRepository;
 
-        this.budgetRepository = budgetRepository;
-        this.userRepository = userRepository;
+public BudgetService(
+        BudgetRepository budgetRepository,
+        UserRepository userRepository) {
+
+    this.budgetRepository = budgetRepository;
+    this.userRepository = userRepository;
+}
+
+public Budget createBudget(
+        BudgetRequest request,
+        String email) {
+
+    User user =
+            userRepository.findByEmail(email);
+
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public Budget createBudget(
-            BudgetRequest request,
-            String email) {
+    Budget budget = new Budget();
 
-        User user =
-                userRepository.findByEmail(email);
+    budget.setCategory(
+            request.getCategory());
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
+    budget.setLimitAmount(
+            request.getLimitAmount());
 
-        Budget budget = new Budget();
+    budget.setUser(user);
 
-        budget.setCategory(request.getCategory());
-        budget.setLimitAmount(request.getLimitAmount());
-        budget.setUser(user);
+    return budgetRepository.save(
+            budget
+    );
+}
 
-        return budgetRepository.save(budget);
+public List<Budget> getBudgetsByUser(
+        String email) {
+
+    User user =
+            userRepository.findByEmail(email);
+
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public List<Budget> getBudgetsByUser(
-            String email) {
+    return budgetRepository.findByUser(
+            user
+    );
+}
 
-        User user =
-                userRepository.findByEmail(email);
+public Budget getBudgetById(
+        Long id) {
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
+    return budgetRepository.findById(id)
+            .orElseThrow(() ->
+                    new RuntimeException(
+                            "Budget not found"
+                    ));
+}
 
-        return budgetRepository.findByUser(user);
-    }
+public Budget updateBudget(
+        Long id,
+        BudgetRequest request) {
+
+    Budget budget =
+            budgetRepository.findById(id)
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Budget not found"
+                            ));
+
+    budget.setCategory(
+            request.getCategory());
+
+    budget.setLimitAmount(
+            request.getLimitAmount());
+
+    return budgetRepository.save(
+            budget
+    );
+}
+
+public void deleteBudget(
+        Long id) {
+
+    budgetRepository.deleteById(
+            id
+    );
+}
+
+
 }
