@@ -10,11 +10,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-
 
 private final UserRepository userRepository;
 private final UserService userService;
@@ -32,6 +32,7 @@ public UserController(
 
 @GetMapping
 public List<User> getAllUsers() {
+
     return userRepository.findAll();
 }
 
@@ -74,6 +75,20 @@ public User getProfile(
     );
 }
 
+@PostMapping("/change-password")
+public String changePassword(
+        Authentication authentication,
+        @RequestBody Map<String, String> request) {
+
+    userService.changePassword(
+            authentication.getName(),
+            request.get("oldPassword"),
+            request.get("newPassword")
+    );
+
+    return "Password updated successfully";
+}
+
 @GetMapping("/extract")
 public String extractEmail(
         @RequestParam String token) {
@@ -82,6 +97,5 @@ public String extractEmail(
             token
     );
 }
-
 
 }

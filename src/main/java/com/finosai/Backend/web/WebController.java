@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebController {
 
-
 @GetMapping("/")
 public String login() {
     return "login";
@@ -52,5 +51,9 @@ public String profile() {
     return "profile";
 }
 
+@GetMapping("/change-password-page")
+public String changePassword() {
+    return "change-password";
+}
 
 }

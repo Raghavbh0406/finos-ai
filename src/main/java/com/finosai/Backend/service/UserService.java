@@ -94,5 +94,42 @@ public User getProfile(
     return user;
 }
 
+public void changePassword(
+        String email,
+        String oldPassword,
+        String newPassword) {
+
+    User user =
+            userRepository.findByEmail(
+                    email
+            );
+
+    if (user == null) {
+
+        throw new RuntimeException(
+                "User not found"
+        );
+    }
+
+    if (!passwordEncoder.matches(
+            oldPassword,
+            user.getPassword())) {
+
+        throw new RuntimeException(
+                "Current password is incorrect"
+        );
+    }
+
+    user.setPassword(
+            passwordEncoder.encode(
+                    newPassword
+            )
+    );
+
+    userRepository.save(
+            user
+    );
+}
+
 
 }

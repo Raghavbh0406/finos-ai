@@ -51,6 +51,7 @@ public SecurityFilterChain securityFilterChain(
 
                             "/api/users",
                             "/api/users/login",
+                            "/change-password-page",
 
                             "/swagger-ui/**",
                             "/v3/api-docs/**",
