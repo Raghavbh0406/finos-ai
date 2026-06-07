@@ -20,25 +20,34 @@ public void sendPasswordResetEmail(
         String email,
         String resetLink) {
 
-    SimpleMailMessage message =
-            new SimpleMailMessage();
+    try {
 
-    message.setTo(
-            email
-    );
+        SimpleMailMessage message =
+                new SimpleMailMessage();
 
-    message.setSubject(
-            "FinOS AI Password Reset"
-    );
+        message.setTo(email);
 
-    message.setText(
-            "Click the link below to reset your password:\n\n"
-                    + resetLink
-    );
+        message.setSubject(
+                "FinOS AI Password Reset"
+        );
 
-    mailSender.send(
-            message
-    );
+        message.setText(
+                "Click the link below to reset your password:\n\n"
+                        + resetLink
+        );
+
+        mailSender.send(message);
+
+        System.out.println(
+                "EMAIL SENT TO: " + email
+        );
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+        throw e;
+    }
 }
 
 }
