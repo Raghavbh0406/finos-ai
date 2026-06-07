@@ -2,7 +2,6 @@ package com.finosai.Backend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -11,62 +10,67 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtFilter;
 
-    public SecurityConfig(
-            JwtAuthenticationFilter jwtFilter) {
+private final JwtAuthenticationFilter jwtFilter;
 
-        this.jwtFilter = jwtFilter;
-    }
+public SecurityConfig(
+        JwtAuthenticationFilter jwtFilter) {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http)
-            throws Exception {
+    this.jwtFilter = jwtFilter;
+}
 
-        http
-                .csrf(csrf -> csrf.disable())
+@Bean
+public SecurityFilterChain securityFilterChain(
+        HttpSecurity http)
+        throws Exception {
 
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
-                        ))
+    http
+            .csrf(csrf -> csrf.disable())
 
-                .authorizeHttpRequests(auth -> auth
+            .sessionManagement(session ->
+                    session.sessionCreationPolicy(
+                            SessionCreationPolicy.STATELESS
+                    ))
 
-                        .requestMatchers(
-    "/",
-    "/login-page",
-    "/register",
-    "/dashboard-page",
-    "/expenses-page",
-    "/budgets-page",
-    "/investments-page",
-    "/income-page",
-    "/savings-page",
+            .authorizeHttpRequests(auth -> auth
 
-    "/css/**",
-    "/js/**",
+                    .requestMatchers(
+                            "/",
+                            "/login-page",
+                            "/register",
+                            "/profile-page",
+                            "/dashboard-page",
+                            "/expenses-page",
+                            "/budgets-page",
+                            "/investments-page",
+                            "/income-page",
+                            "/savings-page",
 
-    "/api/users",
-    "/api/users/login",
+                            "/css/**",
+                            "/js/**",
 
-    "/swagger-ui/**",
-    "/v3/api-docs/**",
-    "/swagger-ui.html"
-).permitAll()
+                            "/api/users",
+                            "/api/users/login",
 
-                         .anyRequest()
-                        .authenticated()
-                )
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**",
+                            "/swagger-ui.html"
+                    ).permitAll()
 
-                .httpBasic(httpBasic -> httpBasic.disable())
+                    .anyRequest()
+                    .authenticated()
+            )
 
-                .addFilterBefore(
-                        jwtFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+            .httpBasic(httpBasic ->
+                    httpBasic.disable())
 
-        return http.build();
-    }
+            .addFilterBefore(
+                    jwtFilter,
+                    UsernamePasswordAuthenticationFilter.class
+            );
+
+    return http.build();
+}
+
+
 }
