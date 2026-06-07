@@ -10,58 +10,115 @@ import java.util.List;
 @Service
 public class InvestmentService {
 
-    private final InvestmentRepository repository;
-    private final UserRepository userRepository;
 
-    public InvestmentService(
-            InvestmentRepository repository,
-            UserRepository userRepository) {
+private final InvestmentRepository repository;
+private final UserRepository userRepository;
 
-        this.repository = repository;
-        this.userRepository = userRepository;
+public InvestmentService(
+        InvestmentRepository repository,
+        UserRepository userRepository) {
+
+    this.repository = repository;
+    this.userRepository = userRepository;
+}
+
+public Investment createInvestment(
+        InvestmentRequest request,
+        String email) {
+
+    User user =
+            userRepository.findByEmail(email);
+
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public Investment createInvestment(
-            InvestmentRequest request,
-            String email) {
+    Investment investment =
+            new Investment();
 
-        User user =
-                userRepository.findByEmail(email);
+    investment.setInvestmentType(
+            request.getInvestmentType());
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
+    investment.setInvestmentName(
+            request.getInvestmentName());
 
-        Investment investment =
-                new Investment();
+    investment.setInvestedAmount(
+            request.getInvestedAmount());
 
-        investment.setInvestmentType(
-                request.getInvestmentType());
+    investment.setCurrentValue(
+            request.getCurrentValue());
 
-        investment.setInvestmentName(
-                request.getInvestmentName());
+    investment.setUser(user);
 
-        investment.setInvestedAmount(
-                request.getInvestedAmount());
+    return repository.save(
+            investment
+    );
+}
 
-        investment.setCurrentValue(
-                request.getCurrentValue());
+public List<Investment> getInvestmentsByUser(
+        String email) {
 
-        investment.setUser(user);
+    User user =
+            userRepository.findByEmail(email);
 
-        return repository.save(investment);
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public List<Investment> getInvestmentsByUser(
-            String email) {
+    return repository.findByUser(
+            user
+    );
+}
 
-        User user =
-                userRepository.findByEmail(email);
+public Investment getInvestmentById(
+        Long id) {
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
+    return repository.findById(id)
+            .orElseThrow(() ->
+                    new RuntimeException(
+                            "Investment not found"
+                    ));
+}
 
-        return repository.findByUser(user);
-    }
+public Investment updateInvestment(
+        Long id,
+        InvestmentRequest request) {
+
+    Investment investment =
+            repository.findById(id)
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Investment not found"
+                            ));
+
+    investment.setInvestmentType(
+            request.getInvestmentType());
+
+    investment.setInvestmentName(
+            request.getInvestmentName());
+
+    investment.setInvestedAmount(
+            request.getInvestedAmount());
+
+    investment.setCurrentValue(
+            request.getCurrentValue());
+
+    return repository.save(
+            investment
+    );
+}
+
+public void deleteInvestment(
+        Long id) {
+
+    repository.deleteById(
+            id
+    );
+}
+
+
 }

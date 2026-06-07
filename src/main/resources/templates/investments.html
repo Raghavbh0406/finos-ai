@@ -3,7 +3,9 @@
 
 <head>
     <title>Investments - FinOS AI</title>
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+    <link rel="stylesheet"
+          href="/css/dashboard.css">
 </head>
 
 <body>
@@ -27,14 +29,14 @@
 
     <div class="card">
 
-        <h3>Add Investment</h3>
+        <h3>Add / Edit Investment</h3>
 
         <br>
 
         <input
                 id="investmentType"
                 type="text"
-                placeholder="Investment Type (Stock, MF, FD...)">
+                placeholder="Investment Type">
 
         <br><br>
 
@@ -59,8 +61,8 @@
 
         <br><br>
 
-        <button onclick="createInvestment()">
-            Add Investment
+        <button onclick="saveInvestment()">
+            Save Investment
         </button>
 
     </div>
@@ -69,19 +71,22 @@
 
     <div class="card">
 
-        <h3>Investment Portfolio</h3>
+        <h3>Investment List</h3>
 
         <br>
 
         <table id="investmentTable">
 
             <thead>
+
             <tr>
                 <th>Type</th>
                 <th>Name</th>
-                <th>Invested</th>
-                <th>Current</th>
+                <th>Invested Amount</th>
+                <th>Current Value</th>
+                <th>Actions</th>
             </tr>
+
             </thead>
 
             <tbody>
@@ -93,7 +98,7 @@
 
 </div>
 
-<script th:src="@{/js/investments.js}"></script>
+<script src="/js/investments.js"></script>
 
 </body>
 </html>
