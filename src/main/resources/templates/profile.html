@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Profile - FinOS AI</title>
+
+
+<link rel="stylesheet"
+      href="/css/dashboard.css">
+
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+
+<h2>FinOS AI</h2>
+
+<a href="/dashboard-page">Dashboard</a>
+<a href="/income-page">Income</a>
+<a href="/expenses-page">Expenses</a>
+<a href="/budgets-page">Budgets</a>
+<a href="/investments-page">Investments</a>
+<a href="/savings-page">Savings Goals</a>
+<a href="/profile-page">Profile</a>
+
+<br><br>
+
+<button onclick="logout()">
+    Logout
+</button>
+
+
+</div>
+
+<div class="main-content">
+
+
+<h1>User Profile</h1>
+
+<div class="card">
+
+    <h3>Profile Information</h3>
+
+    <br>
+
+    <p>
+        <strong>Name:</strong>
+        <span id="name">
+            Loading...
+        </span>
+    </p>
+
+    <br>
+
+    <p>
+        <strong>Email:</strong>
+        <span id="email">
+            Loading...
+        </span>
+    </p>
+
+</div>
+
+
+</div>
+
+<script src="/js/profile.js"></script>
+
+</body>
+</html>
