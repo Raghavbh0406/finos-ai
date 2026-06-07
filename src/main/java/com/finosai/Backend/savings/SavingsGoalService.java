@@ -10,48 +10,109 @@ import java.util.List;
 @Service
 public class SavingsGoalService {
 
-    private final SavingsGoalRepository repository;
-    private final UserRepository userRepository;
 
-    public SavingsGoalService(
-            SavingsGoalRepository repository,
-            UserRepository userRepository) {
+private final SavingsGoalRepository repository;
+private final UserRepository userRepository;
 
-        this.repository = repository;
-        this.userRepository = userRepository;
+public SavingsGoalService(
+        SavingsGoalRepository repository,
+        UserRepository userRepository) {
+
+    this.repository = repository;
+    this.userRepository = userRepository;
+}
+
+public SavingsGoal createGoal(
+        SavingsGoalRequest request,
+        String email) {
+
+    User user =
+            userRepository.findByEmail(email);
+
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public SavingsGoal createGoal(
-            SavingsGoalRequest request,
-            String email) {
+    SavingsGoal goal =
+            new SavingsGoal();
 
-        User user =
-                userRepository.findByEmail(email);
+    goal.setGoalName(
+            request.getGoalName());
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
+    goal.setTargetAmount(
+            request.getTargetAmount());
 
-        SavingsGoal goal = new SavingsGoal();
+    goal.setSavedAmount(
+            request.getSavedAmount());
 
-        goal.setGoalName(request.getGoalName());
-        goal.setTargetAmount(request.getTargetAmount());
-        goal.setSavedAmount(request.getSavedAmount());
-        goal.setUser(user);
+    goal.setUser(user);
 
-        return repository.save(goal);
+    return repository.save(
+            goal
+    );
+}
+
+public List<SavingsGoal> getGoalsByUser(
+        String email) {
+
+    User user =
+            userRepository.findByEmail(email);
+
+    if (user == null) {
+        throw new RuntimeException(
+                "User not found"
+        );
     }
 
-    public List<SavingsGoal> getGoalsByUser(
-            String email) {
+    return repository.findByUser(
+            user
+    );
+}
 
-        User user =
-                userRepository.findByEmail(email);
+public SavingsGoal getGoalById(
+        Long id) {
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
+    return repository.findById(id)
+            .orElseThrow(() ->
+                    new RuntimeException(
+                            "Savings goal not found"
+                    ));
+}
 
-        return repository.findByUser(user);
-    }
+public SavingsGoal updateGoal(
+        Long id,
+        SavingsGoalRequest request) {
+
+    SavingsGoal goal =
+            repository.findById(id)
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Savings goal not found"
+                            ));
+
+    goal.setGoalName(
+            request.getGoalName());
+
+    goal.setTargetAmount(
+            request.getTargetAmount());
+
+    goal.setSavedAmount(
+            request.getSavedAmount());
+
+    return repository.save(
+            goal
+    );
+}
+
+public void deleteGoal(
+        Long id) {
+
+    repository.deleteById(
+            id
+    );
+}
+
+
 }

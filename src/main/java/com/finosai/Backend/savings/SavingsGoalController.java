@@ -10,31 +10,58 @@ import java.util.List;
 @RequestMapping("/api/savings-goals")
 public class SavingsGoalController {
 
-    private final SavingsGoalService service;
+private final SavingsGoalService service;
 
-    public SavingsGoalController(
-            SavingsGoalService service) {
+public SavingsGoalController(
+        SavingsGoalService service) {
 
-        this.service = service;
-    }
+    this.service = service;
+}
 
-    @PostMapping
-    public SavingsGoal createGoal(
-            @RequestBody SavingsGoalRequest request,
-            Authentication authentication) {
+@PostMapping
+public SavingsGoal createGoal(
+        @RequestBody SavingsGoalRequest request,
+        Authentication authentication) {
 
-        return service.createGoal(
-                request,
-                authentication.getName()
-        );
-    }
+    return service.createGoal(
+            request,
+            authentication.getName()
+    );
+}
 
-    @GetMapping
-    public List<SavingsGoal> getMyGoals(
-            Authentication authentication) {
+@GetMapping
+public List<SavingsGoal> getMyGoals(
+        Authentication authentication) {
 
-        return service.getGoalsByUser(
-                authentication.getName()
-        );
-    }
+    return service.getGoalsByUser(
+            authentication.getName()
+    );
+}
+
+@GetMapping("/{id}")
+public SavingsGoal getGoalById(
+        @PathVariable Long id) {
+
+    return service.getGoalById(id);
+}
+
+@PutMapping("/{id}")
+public SavingsGoal updateGoal(
+        @PathVariable Long id,
+        @RequestBody SavingsGoalRequest request) {
+
+    return service.updateGoal(
+            id,
+            request
+    );
+}
+
+@DeleteMapping("/{id}")
+public void deleteGoal(
+        @PathVariable Long id) {
+
+    service.deleteGoal(id);
+}
+
+
 }

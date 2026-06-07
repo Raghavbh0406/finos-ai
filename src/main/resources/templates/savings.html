@@ -3,7 +3,9 @@
 
 <head>
     <title>Savings Goals - FinOS AI</title>
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+    <link rel="stylesheet"
+          href="/css/dashboard.css">
 </head>
 
 <body>
@@ -27,7 +29,7 @@
 
     <div class="card">
 
-        <h3>Create Savings Goal</h3>
+        <h3>Add / Edit Savings Goal</h3>
 
         <br>
 
@@ -52,8 +54,8 @@
 
         <br><br>
 
-        <button onclick="createGoal()">
-            Create Goal
+        <button onclick="saveGoal()">
+            Save Goal
         </button>
 
     </div>
@@ -62,7 +64,7 @@
 
     <div class="card">
 
-        <h3>My Savings Goals</h3>
+        <h3>Savings Goal List</h3>
 
         <br>
 
@@ -71,16 +73,15 @@
             <thead>
 
             <tr>
-                <th>Goal</th>
-                <th>Target</th>
-                <th>Saved</th>
-                <th>Progress</th>
+                <th>Goal Name</th>
+                <th>Target Amount</th>
+                <th>Saved Amount</th>
+                <th>Actions</th>
             </tr>
 
             </thead>
 
             <tbody>
-
             </tbody>
 
         </table>
@@ -89,7 +90,7 @@
 
 </div>
 
-<script th:src="@{/js/savings.js}"></script>
+<script src="/js/savings.js"></script>
 
 </body>
 </html>

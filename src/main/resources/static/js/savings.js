@@ -3,6 +3,8 @@ document.addEventListener(
     loadGoals
 );
 
+let editingId = null;
+
 async function loadGoals() {
 
     const token =
@@ -10,15 +12,16 @@ async function loadGoals() {
 
     try {
 
-        const response = await fetch(
-            "/api/savings-goals",
-            {
-                headers: {
-                    "Authorization":
-                        "Bearer " + token
+        const response =
+            await fetch(
+                "/api/savings-goals",
+                {
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
                 }
-            }
-        );
+            );
 
         const goals =
             await response.json();
@@ -30,26 +33,25 @@ async function loadGoals() {
 
         tbody.innerHTML = "";
 
-        goals.forEach(function(goal) {
+        goals.forEach(goal => {
 
-            const progress =
-                ((goal.savedAmount || 0) /
-                 (goal.targetAmount || 1))
-                 * 100;
+            tbody.innerHTML += `
+                <tr>
+                    <td>${goal.goalName}</td>
+                    <td>₹${goal.targetAmount}</td>
+                    <td>₹${goal.savedAmount}</td>
 
-            const row =
-                document.createElement("tr");
+                    <td>
+                        <button onclick="editGoal(${goal.id})">
+                            Edit
+                        </button>
 
-            row.innerHTML =
-                "<td>" + goal.goalName + "</td>" +
-                "<td>₹" + goal.targetAmount + "</td>" +
-                "<td>₹" + goal.savedAmount + "</td>" +
-                "<td>" +
-                progress.toFixed(1) +
-                "%</td>";
-
-            tbody.appendChild(row);
-
+                        <button onclick="deleteGoal(${goal.id})">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `;
         });
 
     } catch (error) {
@@ -59,53 +61,91 @@ async function loadGoals() {
     }
 }
 
-async function createGoal() {
+async function saveGoal() {
 
     const token =
         localStorage.getItem("token");
 
-    const goalName =
-        document.getElementById(
-            "goalName"
-        ).value;
+    const goal = {
 
-    const targetAmount =
-        document.getElementById(
-            "targetAmount"
-        ).value;
+        goalName:
+            document.getElementById(
+                "goalName"
+            ).value,
 
-    const savedAmount =
-        document.getElementById(
-            "savedAmount"
-        ).value;
+        targetAmount:
+            Number(
+                document.getElementById(
+                    "targetAmount"
+                ).value
+            ),
+
+        savedAmount:
+            Number(
+                document.getElementById(
+                    "savedAmount"
+                ).value
+            )
+    };
 
     try {
 
-        const response = await fetch(
-            "/api/savings-goals",
-            {
-                method: "POST",
+        let response;
 
-                headers: {
-                    "Content-Type":
-                        "application/json",
+        if (editingId !== null) {
 
-                    "Authorization":
-                        "Bearer " + token
-                },
+            response =
+                await fetch(
+                    "/api/savings-goals/" +
+                    editingId,
+                    {
+                        method: "PUT",
 
-                body: JSON.stringify({
-                    goalName: goalName,
-                    targetAmount: targetAmount,
-                    savedAmount: savedAmount
-                })
-            }
-        );
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                "Bearer " + token
+                        },
+
+                        body:
+                            JSON.stringify(
+                                goal
+                            )
+                    }
+                );
+
+            editingId = null;
+
+        } else {
+
+            response =
+                await fetch(
+                    "/api/savings-goals",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                "Bearer " + token
+                        },
+
+                        body:
+                            JSON.stringify(
+                                goal
+                            )
+                    }
+                );
+        }
 
         if (!response.ok) {
 
             throw new Error(
-                "Failed to create goal"
+                "Save failed"
             );
         }
 
@@ -128,7 +168,91 @@ async function createGoal() {
         console.error(error);
 
         alert(
-            "Failed to create goal"
+            "Failed to save goal"
+        );
+    }
+}
+
+async function editGoal(id) {
+
+    const token =
+        localStorage.getItem("token");
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/savings-goals/" + id,
+                {
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+        const goal =
+            await response.json();
+
+        editingId = id;
+
+        document.getElementById(
+            "goalName"
+        ).value =
+            goal.goalName;
+
+        document.getElementById(
+            "targetAmount"
+        ).value =
+            goal.targetAmount;
+
+        document.getElementById(
+            "savedAmount"
+        ).value =
+            goal.savedAmount;
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+async function deleteGoal(id) {
+
+    const token =
+        localStorage.getItem("token");
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/savings-goals/" + id,
+                {
+                    method: "DELETE",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Delete failed"
+            );
+        }
+
+        loadGoals();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Failed to delete goal"
         );
     }
 }
