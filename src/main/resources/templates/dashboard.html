@@ -5,163 +5,171 @@
 <head>
     <title>FinOS AI Dashboard</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<link rel="stylesheet"
-      th:href="@{/css/dashboard.css}">
-
-
+    <link rel="stylesheet"
+          th:href="@{/css/dashboard.css}">
 </head>
 
 <body>
 
 <div class="sidebar">
 
+    <h2>FinOS AI</h2>
 
-<h2>FinOS AI</h2>
+    <a href="/dashboard-page">Dashboard</a>
+    <a href="/income-page">Income</a>
+    <a href="/expenses-page">Expenses</a>
+    <a href="/budgets-page">Budgets</a>
+    <a href="/investments-page">Investments</a>
+    <a href="/savings-page">Savings Goals</a>
 
-<a href="/dashboard-page">Dashboard</a>
-<a href="/income-page">Income</a>
-<a href="/expenses-page">Expenses</a>
-<a href="/budgets-page">Budgets</a>
-<a href="/investments-page">Investments</a>
-<a href="/savings-page">Savings Goals</a>
-```
+    <br><br>
+
+    <button
+            onclick="logout()"
+            style="
+                width:100%;
+                padding:10px;
+                cursor:pointer;
+            ">
+        Logout
+    </button>
 
 </div>
 
 <div class="main-content">
 
-<h1>Dashboard</h1>
+    <h1>Dashboard</h1>
 
-<div class="cards">
+    <div class="cards">
 
-    <div class="card">
-        <h3>Total Expenses</h3>
-        <p id="totalExpenses">₹0</p>
+        <div class="card">
+            <h3>Total Expenses</h3>
+            <p id="totalExpenses">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Budgets</h3>
+            <p id="totalBudgets">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Investments</h3>
+            <p id="totalInvestments">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Savings</h3>
+            <p id="totalSavings">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Expense Count</h3>
+            <p id="expenseCount">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Investment Count</h3>
+            <p id="investmentCount">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Savings Goals</h3>
+            <p id="goalCount">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Portfolio Gain</h3>
+            <p id="portfolioGain">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Net Worth</h3>
+            <p id="netWorth">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Savings Progress</h3>
+            <p id="savingsProgress">0%</p>
+        </div>
+
+        <div class="card">
+            <h3>Budget Utilization</h3>
+            <p id="budgetUtilization">0%</p>
+        </div>
+
+        <div class="card">
+            <h3>Financial Health</h3>
+            <p id="healthScore">0/100</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Income</h3>
+            <p id="totalIncome">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Cash Flow</h3>
+            <p id="cashFlow">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Savings Rate</h3>
+            <p id="savingsRate">0%</p>
+        </div>
+
     </div>
 
-    <div class="card">
-        <h3>Total Budgets</h3>
-        <p id="totalBudgets">₹0</p>
-    </div>
+    <br>
 
     <div class="card">
-        <h3>Total Investments</h3>
-        <p id="totalInvestments">₹0</p>
+
+        <h3>Expense Distribution</h3>
+
+        <canvas id="expenseChart"></canvas>
+
     </div>
+
+    <br>
 
     <div class="card">
-        <h3>Total Savings</h3>
-        <p id="totalSavings">₹0</p>
+
+        <h3>Investment Portfolio</h3>
+
+        <canvas id="investmentChart"></canvas>
+
     </div>
+
+    <br>
 
     <div class="card">
-        <h3>Expense Count</h3>
-        <p id="expenseCount">0</p>
+
+        <h3>Monthly Expense Trend</h3>
+
+        <canvas id="expenseTrendChart"></canvas>
+
     </div>
+
+    <br>
 
     <div class="card">
-        <h3>Investment Count</h3>
-        <p id="investmentCount">0</p>
+
+        <h3>Income vs Expense</h3>
+
+        <canvas id="incomeExpenseChart"></canvas>
+
     </div>
+
+    <br>
 
     <div class="card">
-        <h3>Savings Goals</h3>
-        <p id="goalCount">0</p>
+
+        <h3>AI Insights</h3>
+
+        <ul id="insightsList"></ul>
+
     </div>
-
-    <div class="card">
-        <h3>Portfolio Gain</h3>
-        <p id="portfolioGain">₹0</p>
-    </div>
-
-    <div class="card">
-        <h3>Net Worth</h3>
-        <p id="netWorth">₹0</p>
-    </div>
-
-    <div class="card">
-        <h3>Savings Progress</h3>
-        <p id="savingsProgress">0%</p>
-    </div>
-
-    <div class="card">
-        <h3>Budget Utilization</h3>
-        <p id="budgetUtilization">0%</p>
-    </div>
-
-    <div class="card">
-        <h3>Financial Health</h3>
-        <p id="healthScore">0/100</p>
-    </div>
-
-</div>
-
-<br>
-
-<div class="card">
-
-    <h3>Expense Distribution</h3>
-
-    <canvas id="expenseChart"></canvas>
-
-</div>
-
-<br>
-
-<div class="card">
-
-    <h3>Investment Portfolio</h3>
-
-    <canvas id="investmentChart"></canvas>
-
-</div>
-
-<br>
-
-<div class="card">
-
-    <h3>Monthly Expense Trend</h3>
-
-    <canvas id="expenseTrendChart"></canvas>
-
-</div>
-
-<div class="card">
-
-    <h3>Income vs Expense</h3>
-
-    <canvas id="incomeExpenseChart"></canvas>
-
-</div>
-
-<br>
-
-<div class="card">
-
-    <h3>AI Insights</h3>
-
-    <ul id="insightsList"></ul>
-
-</div>
-
-<div class="card">
-    <h3>Total Income</h3>
-    <p id="totalIncome">₹0</p>
-</div>
-
-<div class="card">
-    <h3>Cash Flow</h3>
-    <p id="cashFlow">₹0</p>
-</div>
-
-<div class="card">
-    <h3>Savings Rate</h3>
-    <p id="savingsRate">0%</p>
-</div>
-
 
 </div>
 
