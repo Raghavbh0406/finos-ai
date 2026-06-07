@@ -10,7 +10,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-
 private final JwtAuthenticationFilter jwtFilter;
 
 public SecurityConfig(
@@ -35,27 +34,35 @@ public SecurityFilterChain securityFilterChain(
             .authorizeHttpRequests(auth -> auth
 
                     .requestMatchers(
+
                             "/",
                             "/login-page",
                             "/register",
-                            "/profile-page",
+
                             "/dashboard-page",
+                            "/income-page",
                             "/expenses-page",
                             "/budgets-page",
                             "/investments-page",
-                            "/income-page",
                             "/savings-page",
+
+                            "/profile-page",
+                            "/change-password-page",
+                            "/forgot-password-page",
+                            "/reset-password-page",
 
                             "/css/**",
                             "/js/**",
 
                             "/api/users",
                             "/api/users/login",
-                            "/change-password-page",
+                            "/api/users/forgot-password",
+                            "/api/users/reset-password",
 
                             "/swagger-ui/**",
-                            "/v3/api-docs/**",
-                            "/swagger-ui.html"
+                            "/swagger-ui.html",
+                            "/v3/api-docs/**"
+
                     ).permitAll()
 
                     .anyRequest()
@@ -72,6 +79,5 @@ public SecurityFilterChain securityFilterChain(
 
     return http.build();
 }
-
 
 }
