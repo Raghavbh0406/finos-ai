@@ -89,6 +89,29 @@ public String changePassword(
     return "Password updated successfully";
 }
 
+@PostMapping("/forgot-password")
+public String forgotPassword(
+        @RequestBody Map<String, String> request) {
+
+    userService.forgotPassword(
+            request.get("email")
+    );
+
+    return "Password reset email sent";
+}
+
+@PostMapping("/reset-password")
+public String resetPassword(
+        @RequestBody Map<String, String> request) {
+
+    userService.resetPassword(
+            request.get("token"),
+            request.get("newPassword")
+    );
+
+    return "Password reset successful";
+}
+
 @GetMapping("/extract")
 public String extractEmail(
         @RequestParam String token) {

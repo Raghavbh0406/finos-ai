@@ -11,7 +11,6 @@ import java.util.List;
 @Table(name = "users")
 public class User {
 
-
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Long id;
@@ -22,6 +21,8 @@ private String email;
 
 @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 private String password;
+
+private String resetToken;
 
 @OneToMany(mappedBy = "user")
 @JsonIgnore
@@ -46,6 +47,10 @@ public String getPassword() {
     return password;
 }
 
+public String getResetToken() {
+    return resetToken;
+}
+
 public List<Expense> getExpenses() {
     return expenses;
 }
@@ -64,6 +69,10 @@ public void setEmail(String email) {
 
 public void setPassword(String password) {
     this.password = password;
+}
+
+public void setResetToken(String resetToken) {
+    this.resetToken = resetToken;
 }
 
 public void setExpenses(List<Expense> expenses) {
