@@ -1,88 +1,124 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>Budgets - FinOS AI</title>
 
-    <link rel="stylesheet"
-          href="/css/dashboard.css">
+
+<link rel="stylesheet"
+      href="/css/dashboard.css">
+
+
 </head>
 
 <body>
 
 <div class="sidebar">
 
-    <h2>FinOS AI</h2>
 
-    <a href="/dashboard-page">Dashboard</a>
-    <a href="/income-page">Income</a>
-    <a href="/expenses-page">Expenses</a>
-    <a href="/budgets-page">Budgets</a>
-    <a href="/investments-page">Investments</a>
-    <a href="/savings-page">Savings Goals</a>
+<h2>FinOS AI</h2>
+
+<a href="/dashboard-page">📊 Dashboard</a>
+<a href="/income-page">💰 Income</a>
+<a href="/expenses-page">💸 Expenses</a>
+<a href="/budgets-page">📋 Budgets</a>
+<a href="/investments-page">📈 Investments</a>
+<a href="/savings-page">🎯 Savings Goals</a>
+<a href="/profile-page">👤 Profile</a>
+
+<br><br>
+
+<button
+        onclick="logout()"
+        style="
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+        ">
+    Logout
+</button>
+
 
 </div>
 
 <div class="main-content">
 
-    <h1>Budgets</h1>
 
-    <div class="card">
+<h1>Budgets</h1>
 
-        <h3>Add / Edit Budget</h3>
+<div class="card">
 
-        <br>
-
-        <input
-                id="category"
-                type="text"
-                placeholder="Category">
-
-        <br><br>
-
-        <input
-                id="limitAmount"
-                type="number"
-                placeholder="Budget Limit">
-
-        <br><br>
-
-        <button onclick="saveBudget()">
-            Save Budget
-        </button>
-
-    </div>
+    <h3>Add / Edit Budget</h3>
 
     <br>
 
-    <div class="card">
+    <input
+            id="category"
+            type="text"
+            placeholder="Category">
 
-        <h3>Budget List</h3>
+    <br><br>
 
-        <br>
+    <input
+            id="limitAmount"
+            type="number"
+            placeholder="Budget Limit">
 
-        <table id="budgetTable">
+    <br><br>
 
-            <thead>
+    <button onclick="saveBudget()">
+        Save Budget
+    </button>
 
-            <tr>
-                <th>Category</th>
-                <th>Limit Amount</th>
-                <th>Actions</th>
-            </tr>
+</div>
 
-            </thead>
+<br>
 
-            <tbody>
-            </tbody>
+<div class="card">
 
-        </table>
+    <h3>Budget List</h3>
 
-    </div>
+    <br>
+
+    <table id="budgetTable">
+
+        <thead>
+
+        <tr>
+            <th>Category</th>
+            <th>Limit Amount</th>
+            <th>Actions</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        </tbody>
+
+    </table>
+
+</div>
+
 
 </div>
 
 <script src="/js/budgets.js"></script>
+
+<script>
+function logout() {
+
+    localStorage.removeItem(
+        "token"
+    );
+
+    window.location.href =
+        "/";
+}
+</script>
 
 </body>
 </html>

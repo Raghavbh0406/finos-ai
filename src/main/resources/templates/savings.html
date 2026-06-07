@@ -1,96 +1,132 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>Savings Goals - FinOS AI</title>
 
-    <link rel="stylesheet"
-          href="/css/dashboard.css">
+
+<link rel="stylesheet"
+      href="/css/dashboard.css">
+
+
 </head>
 
 <body>
 
 <div class="sidebar">
 
-    <h2>FinOS AI</h2>
 
-    <a href="/dashboard-page">Dashboard</a>
-    <a href="/income-page">Income</a>
-    <a href="/expenses-page">Expenses</a>
-    <a href="/budgets-page">Budgets</a>
-    <a href="/investments-page">Investments</a>
-    <a href="/savings-page">Savings Goals</a>
+<h2>FinOS AI</h2>
+
+<a href="/dashboard-page">📊 Dashboard</a>
+<a href="/income-page">💰 Income</a>
+<a href="/expenses-page">💸 Expenses</a>
+<a href="/budgets-page">📋 Budgets</a>
+<a href="/investments-page">📈 Investments</a>
+<a href="/savings-page">🎯 Savings Goals</a>
+<a href="/profile-page">👤 Profile</a>
+
+<br><br>
+
+<button
+        onclick="logout()"
+        style="
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+        ">
+    Logout
+</button>
+
 
 </div>
 
 <div class="main-content">
 
-    <h1>Savings Goals</h1>
 
-    <div class="card">
+<h1>Savings Goals</h1>
 
-        <h3>Add / Edit Savings Goal</h3>
+<div class="card">
 
-        <br>
-
-        <input
-                id="goalName"
-                type="text"
-                placeholder="Goal Name">
-
-        <br><br>
-
-        <input
-                id="targetAmount"
-                type="number"
-                placeholder="Target Amount">
-
-        <br><br>
-
-        <input
-                id="savedAmount"
-                type="number"
-                placeholder="Saved Amount">
-
-        <br><br>
-
-        <button onclick="saveGoal()">
-            Save Goal
-        </button>
-
-    </div>
+    <h3>Add / Edit Savings Goal</h3>
 
     <br>
 
-    <div class="card">
+    <input
+            id="goalName"
+            type="text"
+            placeholder="Goal Name">
 
-        <h3>Savings Goal List</h3>
+    <br><br>
 
-        <br>
+    <input
+            id="targetAmount"
+            type="number"
+            placeholder="Target Amount">
 
-        <table id="goalTable">
+    <br><br>
 
-            <thead>
+    <input
+            id="savedAmount"
+            type="number"
+            placeholder="Saved Amount">
 
-            <tr>
-                <th>Goal Name</th>
-                <th>Target Amount</th>
-                <th>Saved Amount</th>
-                <th>Actions</th>
-            </tr>
+    <br><br>
 
-            </thead>
+    <button onclick="saveGoal()">
+        Save Goal
+    </button>
 
-            <tbody>
-            </tbody>
+</div>
 
-        </table>
+<br>
 
-    </div>
+<div class="card">
+
+    <h3>Savings Goal List</h3>
+
+    <br>
+
+    <table id="goalTable">
+
+        <thead>
+
+        <tr>
+            <th>Goal Name</th>
+            <th>Target Amount</th>
+            <th>Saved Amount</th>
+            <th>Actions</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        </tbody>
+
+    </table>
+
+</div>
+
 
 </div>
 
 <script src="/js/savings.js"></script>
+
+<script>
+function logout() {
+
+    localStorage.removeItem(
+        "token"
+    );
+
+    window.location.href =
+        "/";
+}
+</script>
 
 </body>
 </html>

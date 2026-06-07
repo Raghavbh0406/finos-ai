@@ -1,104 +1,140 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>Investments - FinOS AI</title>
 
-    <link rel="stylesheet"
-          href="/css/dashboard.css">
+
+<link rel="stylesheet"
+      href="/css/dashboard.css">
+
+
 </head>
 
 <body>
 
 <div class="sidebar">
 
-    <h2>FinOS AI</h2>
 
-    <a href="/dashboard-page">Dashboard</a>
-    <a href="/income-page">Income</a>
-    <a href="/expenses-page">Expenses</a>
-    <a href="/budgets-page">Budgets</a>
-    <a href="/investments-page">Investments</a>
-    <a href="/savings-page">Savings Goals</a>
+<h2>FinOS AI</h2>
+
+<a href="/dashboard-page">📊 Dashboard</a>
+<a href="/income-page">💰 Income</a>
+<a href="/expenses-page">💸 Expenses</a>
+<a href="/budgets-page">📋 Budgets</a>
+<a href="/investments-page">📈 Investments</a>
+<a href="/savings-page">🎯 Savings Goals</a>
+<a href="/profile-page">👤 Profile</a>
+
+<br><br>
+
+<button
+        onclick="logout()"
+        style="
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+        ">
+    Logout
+</button>
+
 
 </div>
 
 <div class="main-content">
 
-    <h1>Investments</h1>
 
-    <div class="card">
+<h1>Investments</h1>
 
-        <h3>Add / Edit Investment</h3>
+<div class="card">
 
-        <br>
-
-        <input
-                id="investmentType"
-                type="text"
-                placeholder="Investment Type">
-
-        <br><br>
-
-        <input
-                id="investmentName"
-                type="text"
-                placeholder="Investment Name">
-
-        <br><br>
-
-        <input
-                id="investedAmount"
-                type="number"
-                placeholder="Invested Amount">
-
-        <br><br>
-
-        <input
-                id="currentValue"
-                type="number"
-                placeholder="Current Value">
-
-        <br><br>
-
-        <button onclick="saveInvestment()">
-            Save Investment
-        </button>
-
-    </div>
+    <h3>Add / Edit Investment</h3>
 
     <br>
 
-    <div class="card">
+    <input
+            id="investmentType"
+            type="text"
+            placeholder="Investment Type">
 
-        <h3>Investment List</h3>
+    <br><br>
 
-        <br>
+    <input
+            id="investmentName"
+            type="text"
+            placeholder="Investment Name">
 
-        <table id="investmentTable">
+    <br><br>
 
-            <thead>
+    <input
+            id="investedAmount"
+            type="number"
+            placeholder="Invested Amount">
 
-            <tr>
-                <th>Type</th>
-                <th>Name</th>
-                <th>Invested Amount</th>
-                <th>Current Value</th>
-                <th>Actions</th>
-            </tr>
+    <br><br>
 
-            </thead>
+    <input
+            id="currentValue"
+            type="number"
+            placeholder="Current Value">
 
-            <tbody>
-            </tbody>
+    <br><br>
 
-        </table>
+    <button onclick="saveInvestment()">
+        Save Investment
+    </button>
 
-    </div>
+</div>
+
+<br>
+
+<div class="card">
+
+    <h3>Investment List</h3>
+
+    <br>
+
+    <table id="investmentTable">
+
+        <thead>
+
+        <tr>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Invested Amount</th>
+            <th>Current Value</th>
+            <th>Actions</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        </tbody>
+
+    </table>
+
+</div>
+
 
 </div>
 
 <script src="/js/investments.js"></script>
+
+<script>
+function logout() {
+
+    localStorage.removeItem(
+        "token"
+    );
+
+    window.location.href =
+        "/";
+}
+</script>
 
 </body>
 </html>
