@@ -1,19 +1,15 @@
 package com.finosai.Backend.service;
 
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import com.resend.Resend;
+import com.resend.services.emails.model.CreateEmailOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
 
-    private final JavaMailSender mailSender;
-
-    public EmailService(
-            JavaMailSender mailSender) {
-
-        this.mailSender = mailSender;
-    }
+    @Value("${RESEND_API_KEY}")
+    private String resendApiKey;
 
     public void sendPasswordResetEmail(
             String email,
@@ -21,41 +17,42 @@ public class EmailService {
 
         try {
 
+            Resend resend =
+                    new Resend(
+                            resendApiKey
+                    );
+
+            CreateEmailOptions params =
+                    CreateEmailOptions.builder()
+                            .from("FinOS AI <onboarding@resend.dev>")
+                            .to("raghavbhalla0604@gmail.com")
+                            .subject("FinOS AI Password Reset")
+                            .html(
+                                    "<h2>FinOS AI Password Reset</h2>"
+                                            + "<p>Reset link requested for: " + email + "</p>"
+                                            + "<p>Click the link below to reset your password:</p>"
+                                            + "<a href='"
+                                            + resetLink
+                                            + "'>"
+                                            + resetLink
+                                            + "</a>"
+                            )
+                            .build();
+
+            resend.emails().send(
+                    params
+            );
+
             System.out.println(
-                    "STARTING EMAIL SEND..."
-            );
-
-            SimpleMailMessage message =
-                    new SimpleMailMessage();
-
-            message.setTo(email);
-
-            message.setSubject(
-                    "FinOS AI Password Reset"
-            );
-
-            message.setText(
-                    "Click the link below to reset your password:\n\n"
-                            + resetLink
-            );
-
-            mailSender.send(message);
-
-            System.out.println(
-                    "EMAIL SENT SUCCESSFULLY TO: "
-                            + email
+                    "EMAIL SENT TO: " + email
             );
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "EMAIL SEND FAILED"
-            );
-
             e.printStackTrace();
 
             throw new RuntimeException(
-                    e
+                    "Failed to send email: " + e.getMessage()
             );
         }
     }
