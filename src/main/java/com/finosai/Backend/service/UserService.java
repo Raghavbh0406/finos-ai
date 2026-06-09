@@ -6,95 +6,61 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class UserService {
 
 private final UserRepository userRepository;
-private final EmailService emailService;
 
 private final PasswordEncoder passwordEncoder =
         new BCryptPasswordEncoder();
 
-public UserService(
-        UserRepository userRepository,
-        EmailService emailService) {
-
-    this.userRepository =
-            userRepository;
-
-    this.emailService =
-            emailService;
+public UserService(UserRepository userRepository) {
+    this.userRepository = userRepository;
 }
 
-public User registerUser(
-        User user) {
+public User registerUser(User user) {
 
     User existingUser =
-            userRepository.findByEmail(
-                    user.getEmail()
-            );
+            userRepository.findByEmail(user.getEmail());
 
     if (existingUser != null) {
-
-        throw new RuntimeException(
-                "Email already exists"
-        );
+        throw new RuntimeException("Email already exists");
     }
 
     user.setPassword(
-            passwordEncoder.encode(
-                    user.getPassword()
-            )
+            passwordEncoder.encode(user.getPassword())
     );
 
-    return userRepository.save(
-            user
-    );
-}
-
-public User loginUser(
-        String email,
-        String password) {
-
-    User user =
-            userRepository.findByEmail(
-                    email
-            );
-
-    if (user == null) {
-
-        throw new RuntimeException(
-                "User not found"
+    if (user.getSecurityAnswer() != null) {
+        user.setSecurityAnswer(
+                user.getSecurityAnswer().trim().toLowerCase()
         );
     }
 
-    if (!passwordEncoder.matches(
-            password,
-            user.getPassword())) {
+    return userRepository.save(user);
+}
 
-        throw new RuntimeException(
-                "Invalid password"
-        );
+public User loginUser(String email, String password) {
+
+    User user = userRepository.findByEmail(email);
+
+    if (user == null) {
+        throw new RuntimeException("User not found");
+    }
+
+    if (!passwordEncoder.matches(password, user.getPassword())) {
+        throw new RuntimeException("Invalid password");
     }
 
     return user;
 }
 
-public User getProfile(
-        String email) {
+public User getProfile(String email) {
 
-    User user =
-            userRepository.findByEmail(
-                    email
-            );
+    User user = userRepository.findByEmail(email);
 
     if (user == null) {
-
-        throw new RuntimeException(
-                "User not found"
-        );
+        throw new RuntimeException("User not found");
     }
 
     return user;
@@ -105,123 +71,66 @@ public void changePassword(
         String oldPassword,
         String newPassword) {
 
-    User user =
-            userRepository.findByEmail(
-                    email
-            );
+    User user = userRepository.findByEmail(email);
 
     if (user == null) {
-
-        throw new RuntimeException(
-                "User not found"
-        );
+        throw new RuntimeException("User not found");
     }
 
-    if (!passwordEncoder.matches(
-            oldPassword,
-            user.getPassword())) {
-
-        throw new RuntimeException(
-                "Current password is incorrect"
-        );
+    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        throw new RuntimeException("Current password is incorrect");
     }
 
-    user.setPassword(
-            passwordEncoder.encode(
-                    newPassword
-            )
-    );
-
-    userRepository.save(
-            user
-    );
+    user.setPassword(passwordEncoder.encode(newPassword));
+    userRepository.save(user);
 }
 
-public void forgotPassword(
-        String email) {
+public String getSecurityQuestion(String email) {
 
-    User user =
-            userRepository.findByEmail(
-                    email
-            );
+    User user = userRepository.findByEmail(email);
 
     if (user == null) {
-
-        throw new RuntimeException(
-                "User not found"
-        );
+        throw new RuntimeException("User not found");
     }
 
-    String token =
-            UUID.randomUUID()
-                    .toString();
+    if (user.getSecurityQuestion() == null) {
+        throw new RuntimeException("No security question set for this account");
+    }
 
-    user.setResetToken(
-            token
-    );
-
-    userRepository.save(
-            user
-    );
-
-    String resetLink =
-            "https://finos-ai-production.up.railway.app/reset-password-page?token="
-                    + token;
-
-    emailService.sendPasswordResetEmail(
-            user.getEmail(),
-            resetLink
-    );
+    return user.getSecurityQuestion();
 }
 
-public void resetPassword(
-        String token,
+public void resetPasswordWithSecurityAnswer(
+        String email,
+        String answer,
         String newPassword) {
 
-    User user =
-            userRepository.findByResetToken(
-                    token
-            );
+    User user = userRepository.findByEmail(email);
 
     if (user == null) {
-
-        throw new RuntimeException(
-                "Invalid token"
-        );
+        throw new RuntimeException("User not found");
     }
 
-    user.setPassword(
-            passwordEncoder.encode(
-                    newPassword
-            )
-    );
+    if (user.getSecurityAnswer() == null) {
+        throw new RuntimeException("No security answer set for this account");
+    }
 
-    user.setResetToken(
-            null
-    );
+    if (!user.getSecurityAnswer().equals(answer.trim().toLowerCase())) {
+        throw new RuntimeException("Incorrect security answer");
+    }
 
-    userRepository.save(
-            user
-    );
+    user.setPassword(passwordEncoder.encode(newPassword));
+    userRepository.save(user);
 }
-public void deleteUser(
-        String email) {
 
-    User user =
-            userRepository.findByEmail(
-                    email
-            );
+public void deleteUser(String email) {
+
+    User user = userRepository.findByEmail(email);
 
     if (user == null) {
-
-        throw new RuntimeException(
-                "User not found"
-        );
+        throw new RuntimeException("User not found");
     }
 
-    userRepository.delete(
-            user
-    );
-
+    userRepository.delete(user);
 }
 }

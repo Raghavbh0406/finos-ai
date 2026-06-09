@@ -12,15 +12,12 @@ public class SecurityConfig {
 
 private final JwtAuthenticationFilter jwtFilter;
 
-public SecurityConfig(
-        JwtAuthenticationFilter jwtFilter) {
-
+public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
     this.jwtFilter = jwtFilter;
 }
 
 @Bean
-public SecurityFilterChain securityFilterChain(
-        HttpSecurity http)
+public SecurityFilterChain securityFilterChain(HttpSecurity http)
         throws Exception {
 
     http
@@ -56,8 +53,8 @@ public SecurityFilterChain securityFilterChain(
 
                             "/api/users",
                             "/api/users/login",
-                            "/api/users/forgot-password",
-                            "/api/users/reset-password",
+                            "/api/users/get-security-question",
+                            "/api/users/reset-password-with-answer",
 
                             "/swagger-ui/**",
                             "/swagger-ui.html",
@@ -69,8 +66,7 @@ public SecurityFilterChain securityFilterChain(
                     .authenticated()
             )
 
-            .httpBasic(httpBasic ->
-                    httpBasic.disable())
+            .httpBasic(httpBasic -> httpBasic.disable())
 
             .addFilterBefore(
                     jwtFilter,
@@ -79,5 +75,4 @@ public SecurityFilterChain securityFilterChain(
 
     return http.build();
 }
-
 }

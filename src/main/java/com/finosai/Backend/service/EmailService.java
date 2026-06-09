@@ -12,48 +12,29 @@ public class EmailService {
     private String resendApiKey;
 
     public void sendPasswordResetEmail(
-            String email,
-            String resetLink) {
+            String toEmail,
+            String content) {
 
         try {
 
-            Resend resend =
-                    new Resend(
-                            resendApiKey
-                    );
+            Resend resend = new Resend(resendApiKey);
 
             CreateEmailOptions params =
                     CreateEmailOptions.builder()
                             .from("FinOS AI <onboarding@resend.dev>")
                             .to("raghavbhalla0604@gmail.com")
-                            .subject("FinOS AI Password Reset")
-                            .html(
-                                    "<h2>FinOS AI Password Reset</h2>"
-                                            + "<p>Reset link requested for: " + email + "</p>"
-                                            + "<p>Click the link below to reset your password:</p>"
-                                            + "<a href='"
-                                            + resetLink
-                                            + "'>"
-                                            + resetLink
-                                            + "</a>"
-                            )
+                            .subject("FinOS AI Notification")
+                            .html("<p>" + content + "</p>")
                             .build();
 
-            resend.emails().send(
-                    params
-            );
+            resend.emails().send(params);
 
-            System.out.println(
-                    "EMAIL SENT TO: " + email
-            );
+            System.out.println("EMAIL SENT for: " + toEmail);
 
         } catch (Exception e) {
 
             e.printStackTrace();
-
-            throw new RuntimeException(
-                    "Failed to send email: " + e.getMessage()
-            );
+            System.out.println("EMAIL FAILED: " + e.getMessage());
         }
     }
 }

@@ -32,47 +32,30 @@ public UserController(
 
 @GetMapping
 public List<User> getAllUsers() {
-
     return userRepository.findAll();
 }
 
 @PostMapping
-public User createUser(
-        @RequestBody User user) {
-
-    return userService.registerUser(
-            user
-    );
+public User createUser(@RequestBody User user) {
+    return userService.registerUser(user);
 }
 
 @PostMapping("/login")
-public LoginResponse login(
-        @RequestBody LoginRequest request) {
+public LoginResponse login(@RequestBody LoginRequest request) {
 
-    User user =
-            userService.loginUser(
-                    request.getEmail(),
-                    request.getPassword()
-            );
-
-    String token =
-            jwtService.generateToken(
-                    user.getEmail()
-            );
-
-    return new LoginResponse(
-            token,
-            user.getEmail()
+    User user = userService.loginUser(
+            request.getEmail(),
+            request.getPassword()
     );
+
+    String token = jwtService.generateToken(user.getEmail());
+
+    return new LoginResponse(token, user.getEmail());
 }
 
 @GetMapping("/profile")
-public User getProfile(
-        Authentication authentication) {
-
-    return userService.getProfile(
-            authentication.getName()
-    );
+public User getProfile(Authentication authentication) {
+    return userService.getProfile(authentication.getName());
 }
 
 @PostMapping("/change-password")
@@ -89,23 +72,22 @@ public String changePassword(
     return "Password updated successfully";
 }
 
-@PostMapping("/forgot-password")
-public String forgotPassword(
+@PostMapping("/get-security-question")
+public String getSecurityQuestion(
         @RequestBody Map<String, String> request) {
 
-    userService.forgotPassword(
+    return userService.getSecurityQuestion(
             request.get("email")
     );
-
-    return "Password reset email sent";
 }
 
-@PostMapping("/reset-password")
-public String resetPassword(
+@PostMapping("/reset-password-with-answer")
+public String resetPasswordWithAnswer(
         @RequestBody Map<String, String> request) {
 
-    userService.resetPassword(
-            request.get("token"),
+    userService.resetPasswordWithSecurityAnswer(
+            request.get("email"),
+            request.get("answer"),
             request.get("newPassword")
     );
 
@@ -113,12 +95,7 @@ public String resetPassword(
 }
 
 @GetMapping("/extract")
-public String extractEmail(
-        @RequestParam String token) {
-
-    return jwtService.extractEmail(
-            token
-    );
+public String extractEmail(@RequestParam String token) {
+    return jwtService.extractEmail(token);
 }
-
 }

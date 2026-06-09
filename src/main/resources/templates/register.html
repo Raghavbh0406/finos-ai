@@ -11,78 +11,63 @@
     <h1>FinOS AI</h1>
     <h3>Create Account</h3>
 
-    <input
-        type="text"
-        id="name"
-        placeholder="Enter Name">
+    <input type="text" id="name" placeholder="Enter Name">
+    <input type="email" id="email" placeholder="Enter Email">
+    <input type="password" id="password" placeholder="Enter Password">
 
-    <input
-        type="email"
-        id="email"
-        placeholder="Enter Email">
+    <br><br>
+    <label style="font-size:14px;">Security Question (for password recovery)</label><br><br>
 
-    <input
-        type="password"
-        id="password"
-        placeholder="Enter Password">
+    <select id="securityQuestion" style="width:100%; padding:10px; margin-bottom:10px;">
+        <option value="">-- Select a security question --</option>
+        <option value="What is the name of your first pet?">What is the name of your first pet?</option>
+        <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+        <option value="What city were you born in?">What city were you born in?</option>
+        <option value="What was the name of your first school?">What was the name of your first school?</option>
+        <option value="What is your favourite movie?">What is your favourite movie?</option>
+    </select>
 
-    <button onclick="register()">
-        Register
-    </button>
+    <input type="text" id="securityAnswer" placeholder="Your answer (remember this!)">
 
     <br><br>
 
-    <a href="/">
-        Already have an account? Login
-    </a>
+    <button onclick="register()">Register</button>
+
+    <br><br>
+
+    <a href="/">Already have an account? Login</a>
 
 </div>
 
 <script>
-
 async function register() {
 
-    const name =
-        document.getElementById("name").value;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const securityQuestion = document.getElementById("securityQuestion").value;
+    const securityAnswer = document.getElementById("securityAnswer").value;
 
-    const email =
-        document.getElementById("email").value;
+    if (!securityQuestion || !securityAnswer) {
+        alert("Please select a security question and provide an answer.");
+        return;
+    }
 
-    const password =
-        document.getElementById("password").value;
-
-    const response =
-        await fetch(
-            "/api/users",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password
-                })
-            }
-        );
+    const response = await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name, email, password, securityQuestion, securityAnswer
+        })
+    });
 
     if (response.ok) {
-
         alert("Registration Successful");
-
         window.location.href = "/";
-
     } else {
-
         alert("Registration Failed");
-
     }
 }
-
 </script>
 
 </body>
