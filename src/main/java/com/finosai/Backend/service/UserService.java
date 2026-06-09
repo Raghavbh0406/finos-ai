@@ -31,12 +31,6 @@ public User registerUser(User user) {
             passwordEncoder.encode(user.getPassword())
     );
 
-    if (user.getSecurityAnswer() != null) {
-        user.setSecurityAnswer(
-                user.getSecurityAnswer().trim().toLowerCase()
-        );
-    }
-
     return userRepository.save(user);
 }
 
@@ -79,44 +73,6 @@ public void changePassword(
 
     if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
         throw new RuntimeException("Current password is incorrect");
-    }
-
-    user.setPassword(passwordEncoder.encode(newPassword));
-    userRepository.save(user);
-}
-
-public String getSecurityQuestion(String email) {
-
-    User user = userRepository.findByEmail(email);
-
-    if (user == null) {
-        throw new RuntimeException("User not found");
-    }
-
-    if (user.getSecurityQuestion() == null) {
-        throw new RuntimeException("No security question set for this account");
-    }
-
-    return user.getSecurityQuestion();
-}
-
-public void resetPasswordWithSecurityAnswer(
-        String email,
-        String answer,
-        String newPassword) {
-
-    User user = userRepository.findByEmail(email);
-
-    if (user == null) {
-        throw new RuntimeException("User not found");
-    }
-
-    if (user.getSecurityAnswer() == null) {
-        throw new RuntimeException("No security answer set for this account");
-    }
-
-    if (!user.getSecurityAnswer().equals(answer.trim().toLowerCase())) {
-        throw new RuntimeException("Incorrect security answer");
     }
 
     user.setPassword(passwordEncoder.encode(newPassword));

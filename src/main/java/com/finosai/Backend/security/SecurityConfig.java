@@ -45,16 +45,12 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http)
 
                             "/profile-page",
                             "/change-password-page",
-                            "/forgot-password-page",
-                            "/reset-password-page",
 
                             "/css/**",
                             "/js/**",
 
                             "/api/users",
                             "/api/users/login",
-                            "/api/users/get-security-question",
-                            "/api/users/reset-password-with-answer",
 
                             "/swagger-ui/**",
                             "/swagger-ui.html",

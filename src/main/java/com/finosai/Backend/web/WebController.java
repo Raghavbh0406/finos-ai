@@ -56,14 +56,4 @@ public String changePassword() {
     return "change-password";
 }
 
-@GetMapping("/forgot-password-page")
-public String forgotPassword() {
-    return "forgot-password";
-}
-
-@GetMapping("/reset-password-page")
-public String resetPassword() {
-    return "reset-password";
-}
-
 }

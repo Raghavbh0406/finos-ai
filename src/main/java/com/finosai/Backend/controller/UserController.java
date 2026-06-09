@@ -72,28 +72,6 @@ public String changePassword(
     return "Password updated successfully";
 }
 
-@PostMapping("/get-security-question")
-public String getSecurityQuestion(
-        @RequestBody Map<String, String> request) {
-
-    return userService.getSecurityQuestion(
-            request.get("email")
-    );
-}
-
-@PostMapping("/reset-password-with-answer")
-public String resetPasswordWithAnswer(
-        @RequestBody Map<String, String> request) {
-
-    userService.resetPasswordWithSecurityAnswer(
-            request.get("email"),
-            request.get("answer"),
-            request.get("newPassword")
-    );
-
-    return "Password reset successful";
-}
-
 @GetMapping("/extract")
 public String extractEmail(@RequestParam String token) {
     return jwtService.extractEmail(token);
