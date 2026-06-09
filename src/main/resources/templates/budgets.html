@@ -1,124 +1,76 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <title>Budgets - FinOS AI</title>
-
-
-<link rel="stylesheet"
-      href="/css/dashboard.css">
-
-
+    <title>Budgets — FinOS AI</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
-
 <body>
 
 <div class="sidebar">
-
-
-<h2>FinOS AI</h2>
-
-<a href="/dashboard-page">📊 Dashboard</a>
-<a href="/income-page">💰 Income</a>
-<a href="/expenses-page">💸 Expenses</a>
-<a href="/budgets-page">📋 Budgets</a>
-<a href="/investments-page">📈 Investments</a>
-<a href="/savings-page">🎯 Savings Goals</a>
-<a href="/profile-page">👤 Profile</a>
-
-<br><br>
-
-<button
-        onclick="logout()"
-        style="
-            width:100%;
-            padding:12px;
-            border:none;
-            border-radius:8px;
-            cursor:pointer;
-            font-weight:bold;
-        ">
-    Logout
-</button>
-
-
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">💰</div>
+        <span class="sidebar-brand-name">FinOS AI</span>
+    </div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page" class="active">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
 </div>
 
 <div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Budgets</div>
+            <div class="page-subtitle">Set spending limits by category</div>
+        </div>
+    </div>
 
+    <div class="card">
+        <div class="card-title">➕ Add / Edit Budget</div>
+        <div class="form-grid">
+            <div class="form-field">
+                <label for="category">Category</label>
+                <input type="text" id="category" placeholder="e.g. Food">
+            </div>
+            <div class="form-field">
+                <label for="limitAmount">Budget Limit (₹)</label>
+                <input type="number" id="limitAmount" placeholder="0.00">
+            </div>
+            <div class="form-field" style="align-self:end;">
+                <button class="btn btn-primary" onclick="saveBudget()">Save Budget</button>
+            </div>
+        </div>
+    </div>
 
-<h1>Budgets</h1>
-
-<div class="card">
-
-    <h3>Add / Edit Budget</h3>
-
-    <br>
-
-    <input
-            id="category"
-            type="text"
-            placeholder="Category">
-
-    <br><br>
-
-    <input
-            id="limitAmount"
-            type="number"
-            placeholder="Budget Limit">
-
-    <br><br>
-
-    <button onclick="saveBudget()">
-        Save Budget
-    </button>
-
-</div>
-
-<br>
-
-<div class="card">
-
-    <h3>Budget List</h3>
-
-    <br>
-
-    <table id="budgetTable">
-
-        <thead>
-
-        <tr>
-            <th>Category</th>
-            <th>Limit Amount</th>
-            <th>Actions</th>
-        </tr>
-
-        </thead>
-
-        <tbody>
-        </tbody>
-
-    </table>
-
-</div>
-
-
+    <div class="card">
+        <div class="card-title">📋 Budget List</div>
+        <table id="budgetTable">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Limit Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
 
 <script src="/js/budgets.js"></script>
-
 <script>
 function logout() {
-
-    localStorage.removeItem(
-        "token"
-    );
-
-    window.location.href =
-        "/";
+    localStorage.removeItem("token");
+    window.location.href = "/";
 }
 </script>
-
 </body>
 </html>

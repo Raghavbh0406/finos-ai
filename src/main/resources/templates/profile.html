@@ -1,75 +1,87 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <title>Profile - FinOS AI</title>
-
-
-<link rel="stylesheet"
-      href="/css/dashboard.css">
-
-
+    <title>Profile — FinOS AI</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
-
 <body>
 
 <div class="sidebar">
-
-
-<h2>FinOS AI</h2>
-
-<a href="/dashboard-page">Dashboard</a>
-<a href="/income-page">Income</a>
-<a href="/expenses-page">Expenses</a>
-<a href="/budgets-page">Budgets</a>
-<a href="/investments-page">Investments</a>
-<a href="/savings-page">Savings Goals</a>
-<a href="/profile-page">Profile</a>
-<a href="/change-password-page">🔐 Change Password</a>
-
-<br><br>
-
-<button onclick="logout()">
-    Logout
-</button>
-
-
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">💰</div>
+        <span class="sidebar-brand-name">FinOS AI</span>
+    </div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page" class="active">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
 </div>
 
 <div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Profile</div>
+            <div class="page-subtitle">Your account information</div>
+        </div>
+    </div>
 
-
-<h1>User Profile</h1>
-
-<div class="card">
-
-    <h3>Profile Information</h3>
-
-    <br>
-
-    <p>
-        <strong>Name:</strong>
-        <span id="name">
-            Loading...
-        </span>
-    </p>
-
-    <br>
-
-    <p>
-        <strong>Email:</strong>
-        <span id="email">
-            Loading...
-        </span>
-    </p>
-
-</div>
-
-
+    <div class="card" style="max-width:480px;">
+        <div class="card-title">👤 Profile Information</div>
+        <div style="display:flex;align-items:center;gap:20px;margin-bottom:28px;">
+            <div class="avatar" id="avatarInitial">?</div>
+            <div>
+                <div style="font-size:20px;font-weight:700;color:#0f172a;" id="name">Loading...</div>
+                <div style="font-size:14px;color:#64748b;margin-top:4px;" id="email">Loading...</div>
+            </div>
+        </div>
+        <div style="border-top:1px solid #f1f5f9;padding-top:20px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:13px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">Full Name</span>
+                <span style="font-size:14px;font-weight:500;color:#0f172a;" id="profileName">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:13px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">Email</span>
+                <span style="font-size:14px;font-weight:500;color:#0f172a;" id="profileEmail">—</span>
+            </div>
+        </div>
+        <div style="margin-top:24px;">
+            <a href="/change-password-page" class="btn btn-secondary" style="width:100%;justify-content:center;">🔐 Change Password</a>
+        </div>
+    </div>
 </div>
 
 <script src="/js/profile.js"></script>
-
+<script>
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+}
+// Enhance profile page with avatar initial after profile loads
+const origLoad = window.onload;
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const nameEl = document.getElementById('name');
+        const emailEl = document.getElementById('email');
+        const avatarEl = document.getElementById('avatarInitial');
+        const profName = document.getElementById('profileName');
+        const profEmail = document.getElementById('profileEmail');
+        if (nameEl && nameEl.textContent && nameEl.textContent !== 'Loading...') {
+            if (avatarEl) avatarEl.textContent = nameEl.textContent.charAt(0).toUpperCase();
+            if (profName) profName.textContent = nameEl.textContent;
+        }
+        if (emailEl && emailEl.textContent && emailEl.textContent !== 'Loading...') {
+            if (profEmail) profEmail.textContent = emailEl.textContent;
+        }
+    }, 800);
+});
+</script>
 </body>
 </html>

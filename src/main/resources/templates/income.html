@@ -1,129 +1,81 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <title>Income - FinOS AI</title>
-
-
-<link rel="stylesheet"
-      href="/css/dashboard.css">
-
-
+    <title>Income — FinOS AI</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
-
 <body>
 
 <div class="sidebar">
-
-
-<h2>FinOS AI</h2>
-
-<a href="/dashboard-page">📊 Dashboard</a>
-<a href="/income-page">💰 Income</a>
-<a href="/expenses-page">💸 Expenses</a>
-<a href="/budgets-page">📋 Budgets</a>
-<a href="/investments-page">📈 Investments</a>
-<a href="/savings-page">🎯 Savings Goals</a>
-<a href="/profile-page">👤 Profile</a>
-
-<br><br>
-
-<button
-        onclick="logout()"
-        style="
-            width:100%;
-            padding:12px;
-            border:none;
-            border-radius:8px;
-            cursor:pointer;
-            font-weight:bold;
-        ">
-    Logout
-</button>
-
-
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">💰</div>
+        <span class="sidebar-brand-name">FinOS AI</span>
+    </div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page" class="active">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
 </div>
 
 <div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Income</div>
+            <div class="page-subtitle">Record and review your income sources</div>
+        </div>
+    </div>
 
+    <div class="card">
+        <div class="card-title">➕ Add / Edit Income</div>
+        <div class="form-grid">
+            <div class="form-field">
+                <label for="source">Income Source</label>
+                <input type="text" id="source" placeholder="e.g. Salary">
+            </div>
+            <div class="form-field">
+                <label for="amount">Amount (₹)</label>
+                <input type="number" id="amount" placeholder="0.00">
+            </div>
+            <div class="form-field">
+                <label for="date">Date</label>
+                <input type="date" id="date">
+            </div>
+            <div class="form-field" style="align-self:end;">
+                <button class="btn btn-primary" onclick="addIncome()">Save Income</button>
+            </div>
+        </div>
+    </div>
 
-<h1>Income</h1>
-
-<div class="card">
-
-    <h3>Add / Edit Income</h3>
-
-    <br>
-
-    <input
-            id="source"
-            type="text"
-            placeholder="Income Source">
-
-    <br><br>
-
-    <input
-            id="amount"
-            type="number"
-            placeholder="Amount">
-
-    <br><br>
-
-    <input
-            id="date"
-            type="date">
-
-    <br><br>
-
-    <button onclick="addIncome()">
-        Save Income
-    </button>
-
-</div>
-
-<br>
-
-<div class="card">
-
-    <h3>Income List</h3>
-
-    <br>
-
-    <table id="incomeTable">
-
-        <thead>
-        <tr>
-            <th>Source</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        </tbody>
-
-    </table>
-
-</div>
-
-
+    <div class="card">
+        <div class="card-title">📋 Income List</div>
+        <table id="incomeTable">
+            <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
 
 <script src="/js/income.js"></script>
-
 <script>
 function logout() {
-
-    localStorage.removeItem(
-        "token"
-    );
-
-    window.location.href =
-        "/";
+    localStorage.removeItem("token");
+    window.location.href = "/";
 }
 </script>
-
 </body>
 </html>

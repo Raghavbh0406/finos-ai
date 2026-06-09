@@ -1,98 +1,97 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <title>FinOS AI Login</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>FinOS AI — Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',Arial,sans-serif;}
+        body{min-height:100vh;display:flex;background:#0f172a;}
+        .left-panel{width:45%;min-height:100vh;background:linear-gradient(160deg,#0f172a 0%,#1e3a8a 100%);display:flex;flex-direction:column;justify-content:center;padding:60px 56px;position:relative;overflow:hidden;}
+        .left-panel::before{content:'';position:absolute;top:-120px;right:-120px;width:400px;height:400px;border-radius:50%;background:rgba(37,99,235,0.15);}
+        .left-panel::after{content:'';position:absolute;bottom:-80px;left:-80px;width:280px;height:280px;border-radius:50%;background:rgba(37,99,235,0.1);}
+        .brand{display:flex;align-items:center;gap:12px;margin-bottom:56px;}
+        .brand-icon{width:44px;height:44px;background:#2563eb;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+        .brand-name{font-size:22px;font-weight:700;color:white;letter-spacing:-0.3px;}
+        .left-headline{font-size:38px;font-weight:700;color:white;line-height:1.2;letter-spacing:-0.5px;margin-bottom:20px;}
+        .left-headline span{color:#60a5fa;}
+        .left-subtext{font-size:15px;color:#94a3b8;line-height:1.7;margin-bottom:52px;}
+        .feature-list{display:flex;flex-direction:column;gap:18px;}
+        .feature-item{display:flex;align-items:center;gap:14px;}
+        .feature-dot{width:32px;height:32px;border-radius:8px;background:rgba(37,99,235,0.25);border:1px solid rgba(37,99,235,0.4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+        .feature-text{font-size:14px;color:#cbd5e1;font-weight:500;}
+        .right-panel{flex:1;background:#f8fafc;display:flex;align-items:center;justify-content:center;padding:48px 40px;}
+        .form-box{width:100%;max-width:400px;}
+        .form-header{margin-bottom:32px;}
+        .form-header h2{font-size:26px;font-weight:700;color:#0f172a;letter-spacing:-0.4px;margin-bottom:6px;}
+        .form-header p{font-size:14px;color:#64748b;}
+        .form-header p a{color:#2563eb;text-decoration:none;font-weight:500;}
+        .form-header p a:hover{text-decoration:underline;}
+        .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+        .field label{font-size:12px;font-weight:600;color:#374151;letter-spacing:0.2px;}
+        .field input{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:14px;color:#0f172a;background:white;outline:none;transition:border-color 0.15s,box-shadow 0.15s;font-family:inherit;}
+        .field input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,0.12);}
+        .field input::placeholder{color:#9ca3af;}
+        .submit-btn{width:100%;padding:13px;background:#2563eb;color:white;border:none;border-radius:9px;font-size:15px;font-weight:600;cursor:pointer;transition:background 0.15s;margin-top:8px;font-family:inherit;}
+        .submit-btn:hover{background:#1d4ed8;}
+        .alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;}
+        .alert-error{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;}
+        @media(max-width:768px){.left-panel{display:none;}.right-panel{padding:32px 24px;}body{background:#f8fafc;}}
+    </style>
 </head>
-
 <body>
-
-<div class="login-container">
-
-    <div class="login-card">
-
-        <h1>FinOS AI</h1>
-
-        <p class="subtitle">
-            Smart Personal Finance Management
-        </p>
-
-        <input
-                type="email"
-                id="email"
-                placeholder="Enter Email">
-
-        <input
-                type="password"
-                id="password"
-                placeholder="Enter Password">
-
-        <button onclick="login()">
-            Login
-        </button>
-
-        <br><br>
-
-        <a href="/register">
-            Create Account
-        </a>
-
+<div class="left-panel">
+    <div class="brand">
+        <div class="brand-icon">💰</div>
+        <span class="brand-name">FinOS AI</span>
     </div>
-
+    <h1 class="left-headline">Your finances,<br><span>finally under control.</span></h1>
+    <p class="left-subtext">Track spending, set budgets, grow investments —<br>all in one intelligent dashboard.</p>
+    <div class="feature-list">
+        <div class="feature-item"><div class="feature-dot">📊</div><span class="feature-text">Real-time expense & income tracking</span></div>
+        <div class="feature-item"><div class="feature-dot">🎯</div><span class="feature-text">Smart budget alerts & savings goals</span></div>
+        <div class="feature-item"><div class="feature-dot">📈</div><span class="feature-text">Investment portfolio insights</span></div>
+        <div class="feature-item"><div class="feature-dot">🤖</div><span class="feature-text">AI-powered financial health score</span></div>
+    </div>
 </div>
-
+<div class="right-panel">
+    <div class="form-box">
+        <div class="form-header">
+            <h2>Welcome back</h2>
+            <p>Don't have an account? <a href="/register">Sign up free</a></p>
+        </div>
+        <div id="errMsg" class="alert alert-error"></div>
+        <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" placeholder="jane@example.com">
+        </div>
+        <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Your password">
+        </div>
+        <button class="submit-btn" onclick="login()">Sign in</button>
+    </div>
+</div>
 <script>
-
 async function login() {
-
-    const email =
-        document.getElementById("email").value;
-
-    const password =
-        document.getElementById("password").value;
-
-    const response =
-        await fetch(
-            "/api/users/login",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            }
-        );
-
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const err = document.getElementById("errMsg");
+    err.style.display = 'none';
+    const response = await fetch("/api/users/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({email, password})
+    });
     if (response.ok) {
-
-        const data =
-            await response.json();
-
-        localStorage.setItem(
-            "token",
-            data.token
-        );
-
-        window.location.href =
-            "/dashboard-page";
-
+        const data = await response.json();
+        localStorage.setItem("token", data.token);
+        window.location.href = "/dashboard-page";
     } else {
-
-        alert(
-            "Invalid Email or Password"
-        );
-
+        err.textContent = "Invalid email or password.";
+        err.style.display = 'block';
     }
 }
-
+document.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
 </script>
-
 </body>
 </html>
