@@ -1,50 +1,399 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register - FinOS AI</title>
-    <link rel="stylesheet" href="/css/login.css">
+    <title>Create Account - FinOS AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            background: #0f172a;
+        }
+
+        /* ── Left panel ── */
+        .left-panel {
+            width: 45%;
+            min-height: 100vh;
+            background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 56px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.15);
+        }
+
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 56px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            background: #2563eb;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.3px;
+        }
+
+        .left-headline {
+            font-size: 38px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            margin-bottom: 20px;
+        }
+
+        .left-headline span {
+            color: #60a5fa;
+        }
+
+        .left-subtext {
+            font-size: 15px;
+            color: #94a3b8;
+            line-height: 1.7;
+            margin-bottom: 52px;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .feature-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(37, 99, 235, 0.25);
+            border: 1px solid rgba(37, 99, 235, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        /* ── Right panel ── */
+        .right-panel {
+            flex: 1;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 40px;
+        }
+
+        .form-box {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .form-header {
+            margin-bottom: 36px;
+        }
+
+        .form-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+        }
+
+        .form-header p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .form-header p a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-header p a:hover {
+            text-decoration: underline;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            letter-spacing: 0.2px;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 9px;
+            font-size: 14px;
+            color: #0f172a;
+            background: white;
+            transition: border-color 0.18s, box-shadow 0.18s;
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .field input::placeholder {
+            color: #9ca3af;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider-text {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.18s, transform 0.1s;
+            letter-spacing: 0.1px;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.99);
+        }
+
+        .error-msg {
+            display: none;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .success-msg {
+            display: none;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .left-panel { display: none; }
+            .right-panel { padding: 32px 24px; }
+            body { background: #f8fafc; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="login-container">
+<!-- Left panel -->
+<div class="left-panel">
+    <div class="brand">
+        <div class="brand-icon">💰</div>
+        <span class="brand-name">FinOS AI</span>
+    </div>
 
-    <h1>FinOS AI</h1>
-    <h3>Create Account</h3>
+    <h1 class="left-headline">
+        Your finances,<br>
+        <span>finally under control.</span>
+    </h1>
 
-    <input type="text" id="name" placeholder="Enter Name">
-    <input type="email" id="email" placeholder="Enter Email">
-    <input type="password" id="password" placeholder="Enter Password">
+    <p class="left-subtext">
+        Track spending, set budgets, grow investments —<br>
+        all in one intelligent dashboard.
+    </p>
 
-    <br><br>
+    <div class="feature-list">
+        <div class="feature-item">
+            <div class="feature-dot">📊</div>
+            <span class="feature-text">Real-time expense & income tracking</span>
+        </div>
+        <div class="feature-item">
+            <div class="feature-dot">🎯</div>
+            <span class="feature-text">Smart budget alerts & savings goals</span>
+        </div>
+        <div class="feature-item">
+            <div class="feature-dot">📈</div>
+            <span class="feature-text">Investment portfolio insights</span>
+        </div>
+        <div class="feature-item">
+            <div class="feature-dot">🤖</div>
+            <span class="feature-text">AI-powered financial health score</span>
+        </div>
+    </div>
+</div>
 
-    <button onclick="register()">Register</button>
+<!-- Right panel -->
+<div class="right-panel">
+    <div class="form-box">
+        <div class="form-header">
+            <h2>Create your account</h2>
+            <p>Already have one? <a href="/">Sign in</a></p>
+        </div>
 
-    <br><br>
+        <div id="errorMsg" class="error-msg"></div>
+        <div id="successMsg" class="success-msg"></div>
 
-    <a href="/">Already have an account? Login</a>
+        <div class="field-group">
+            <div class="field">
+                <label for="name">Full name</label>
+                <input type="text" id="name" placeholder="Jane Doe">
+            </div>
+            <div class="field">
+                <label for="email">Email address</label>
+                <input type="email" id="email" placeholder="jane@example.com">
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Min. 8 characters">
+            </div>
+        </div>
 
+        <button class="submit-btn" onclick="register()">Create account</button>
+    </div>
 </div>
 
 <script>
 async function register() {
-
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
+    const name     = document.getElementById("name").value.trim();
+    const email    = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
+    const errEl    = document.getElementById("errorMsg");
+    const okEl     = document.getElementById("successMsg");
 
-    const response = await fetch("/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password })
-    });
+    errEl.style.display = 'none';
+    okEl.style.display  = 'none';
 
-    if (response.ok) {
-        alert("Registration Successful");
-        window.location.href = "/";
-    } else {
-        alert("Registration Failed");
+    if (!name || !email || !password) {
+        errEl.textContent = 'Please fill in all fields.';
+        errEl.style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        if (response.ok) {
+            okEl.textContent = 'Account created! Redirecting to login…';
+            okEl.style.display = 'block';
+            setTimeout(() => window.location.href = "/", 1500);
+        } else {
+            const msg = await response.text();
+            errEl.textContent = msg || 'Registration failed. Try a different email.';
+            errEl.style.display = 'block';
+        }
+    } catch (e) {
+        errEl.textContent = 'Something went wrong. Please try again.';
+        errEl.style.display = 'block';
     }
 }
+
+// Allow Enter key to submit
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') register();
+});
 </script>
 
 </body>
