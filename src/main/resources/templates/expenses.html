@@ -5,12 +5,10 @@
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
-
-<div class="sidebar">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-icon">💰</div>
-        <span class="sidebar-brand-name">FinOS AI</span>
-    </div>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
     <div class="sidebar-section-label">Main</div>
     <a href="/dashboard-page">📊 Dashboard</a>
     <a href="/income-page">💰 Income</a>
@@ -24,59 +22,34 @@
     <div class="sidebar-spacer"></div>
     <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
 </div>
-
 <div class="main-content">
-    <div class="page-header">
-        <div>
-            <div class="page-title">Expenses</div>
-            <div class="page-subtitle">Track and manage your spending</div>
-        </div>
-    </div>
-
+    <div class="page-header"><div><div class="page-title">Expenses</div><div class="page-subtitle">Track and manage your spending</div></div></div>
     <div class="card">
         <div class="card-title">➕ Add / Edit Expense</div>
         <div class="form-grid">
-            <div class="form-field">
-                <label for="title">Title</label>
-                <input type="text" id="title" placeholder="e.g. Groceries">
-            </div>
-            <div class="form-field">
-                <label for="amount">Amount (₹)</label>
-                <input type="number" id="amount" placeholder="0.00">
-            </div>
-            <div class="form-field">
-                <label for="category">Category</label>
-                <input type="text" id="category" placeholder="e.g. Food">
-            </div>
-            <div class="form-field" style="align-self:end;">
-                <button class="btn btn-primary" onclick="addExpense()">Save Expense</button>
-            </div>
+            <div class="form-field"><label>Title</label><input type="text" id="title" placeholder="e.g. Groceries"></div>
+            <div class="form-field"><label>Amount (₹)</label><input type="number" id="amount" placeholder="0.00"></div>
+            <div class="form-field"><label>Category</label><input type="text" id="category" placeholder="e.g. Food"></div>
+            <div class="form-field" style="align-self:end;"><button class="btn btn-primary" onclick="addExpense()">💾 Save Expense</button></div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-title">📋 Expense List</div>
-        <table id="expenseTable">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Amount</th>
-                    <th>Category</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="table-wrap">
+            <table id="expenseTable">
+                <thead><tr><th>Title</th><th>Amount</th><th>Category</th><th>Date</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
-
 <script src="/js/expenses.js"></script>
 <script>
-function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "/";
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebarOverlay").classList.toggle("active");
 }
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
 </script>
 </body>
 </html>

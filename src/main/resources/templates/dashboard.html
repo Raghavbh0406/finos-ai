@@ -7,7 +7,13 @@
 </head>
 <body>
 
-<div class="sidebar">
+<!-- Hamburger (mobile) -->
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="sidebar" id="sidebar">
     <div class="sidebar-brand">
         <div class="sidebar-brand-icon">💰</div>
         <span class="sidebar-brand-name">FinOS AI</span>
@@ -27,6 +33,8 @@
 </div>
 
 <div class="main-content">
+
+    <!-- Header -->
     <div class="page-header">
         <div>
             <div class="page-title">Dashboard</div>
@@ -34,27 +42,72 @@
         </div>
     </div>
 
+    <!-- Stat grid -->
     <div class="stat-grid">
         <div class="stat-card"><div class="stat-label">Total Income</div><div class="stat-value positive" id="totalIncome">₹0</div></div>
         <div class="stat-card"><div class="stat-label">Total Expenses</div><div class="stat-value negative" id="totalExpenses">₹0</div></div>
         <div class="stat-card"><div class="stat-label">Cash Flow</div><div class="stat-value" id="cashFlow">₹0</div></div>
         <div class="stat-card"><div class="stat-label">Net Worth</div><div class="stat-value blue" id="netWorth">₹0</div></div>
-        <div class="stat-card"><div class="stat-label">Total Investments</div><div class="stat-value" id="totalInvestments">₹0</div></div>
+        <div class="stat-card"><div class="stat-label">Investments Value</div><div class="stat-value" id="totalInvestments">₹0</div></div>
         <div class="stat-card"><div class="stat-label">Portfolio Gain</div><div class="stat-value" id="portfolioGain">₹0</div></div>
         <div class="stat-card"><div class="stat-label">Total Savings</div><div class="stat-value" id="totalSavings">₹0</div></div>
         <div class="stat-card"><div class="stat-label">Total Budgets</div><div class="stat-value" id="totalBudgets">₹0</div></div>
-        <div class="stat-card"><div class="stat-label">Budget Utilization</div><div class="stat-value" id="budgetUtilization">0%</div></div>
+        <div class="stat-card"><div class="stat-label">Budget Used</div><div class="stat-value" id="budgetUtilization">0%</div></div>
         <div class="stat-card"><div class="stat-label">Savings Progress</div><div class="stat-value" id="savingsProgress">0%</div></div>
         <div class="stat-card"><div class="stat-label">Savings Rate</div><div class="stat-value" id="savingsRate">0%</div></div>
-        <div class="stat-card"><div class="stat-label">Financial Health</div><div class="stat-value blue" id="healthScore">0/100</div></div>
-        <div class="stat-card"><div class="stat-label">Expense Count</div><div class="stat-value" id="expenseCount">0</div></div>
-        <div class="stat-card"><div class="stat-label">Investment Count</div><div class="stat-value" id="investmentCount">0</div></div>
+        <div class="stat-card"><div class="stat-label">Health Score</div><div class="stat-value blue" id="healthScore">0/100</div></div>
+        <div class="stat-card"><div class="stat-label">Expenses Count</div><div class="stat-value" id="expenseCount">0</div></div>
+        <div class="stat-card"><div class="stat-label">Investments</div><div class="stat-value" id="investmentCount">0</div></div>
         <div class="stat-card"><div class="stat-label">Savings Goals</div><div class="stat-value" id="goalCount">0</div></div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+    <!-- Financial Health Score -->
+    <div class="card">
+        <div class="card-title">💪 Financial Health Score</div>
+        <div class="health-ring-wrap">
+            <div class="health-ring">
+                <svg width="110" height="110" viewBox="0 0 110 110">
+                    <circle class="health-ring-bg"   cx="55" cy="55" r="45"/>
+                    <circle class="health-ring-fill" cx="55" cy="55" r="45"
+                        id="healthRingFill"
+                        style="stroke-dasharray:282.7;stroke-dashoffset:282.7;"/>
+                </svg>
+                <div class="health-ring-label">
+                    <span class="health-score-num" id="healthScore2">0</span>
+                    <span class="health-score-sub" id="healthLabel">—</span>
+                </div>
+            </div>
+            <div class="health-detail">
+                <h3>Your Financial Wellness</h3>
+                <p>Based on budgeting, savings rate, investments and goal progress</p>
+                <div class="health-bar-row">
+                    <span class="health-bar-label">Budget Control</span>
+                    <div class="progress-bar"><div class="progress-fill" id="hb-budget"></div></div>
+                    <span class="health-bar-val" id="hb-budget-val">—</span>
+                </div>
+                <div class="health-bar-row">
+                    <span class="health-bar-label">Savings Rate</span>
+                    <div class="progress-bar"><div class="progress-fill" id="hb-savings"></div></div>
+                    <span class="health-bar-val" id="hb-savings-val">—</span>
+                </div>
+                <div class="health-bar-row">
+                    <span class="health-bar-label">Portfolio Return</span>
+                    <div class="progress-bar"><div class="progress-fill" id="hb-invest"></div></div>
+                    <span class="health-bar-val" id="hb-invest-val">—</span>
+                </div>
+                <div class="health-bar-row">
+                    <span class="health-bar-label">Goals Progress</span>
+                    <div class="progress-bar"><div class="progress-fill" id="hb-goals"></div></div>
+                    <span class="health-bar-val" id="hb-goals-val">—</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts row 1 -->
+    <div class="chart-grid">
         <div class="card">
-            <div class="card-title">📊 Expense Distribution</div>
+            <div class="card-title">🍩 Expense by Category</div>
             <div class="chart-container"><canvas id="expenseChart"></canvas></div>
         </div>
         <div class="card">
@@ -63,24 +116,50 @@
         </div>
     </div>
 
+    <!-- Monthly trend -->
     <div class="card">
-        <div class="card-title">📉 Monthly Expense Trend</div>
+        <div class="card-title">📉 Monthly Income vs Expenses Trend</div>
         <div class="chart-container"><canvas id="expenseTrendChart"></canvas></div>
     </div>
 
-    <div class="card" style="margin-top:20px;">
-        <div class="card-title">💹 Income vs Expenses</div>
-        <div class="chart-container"><canvas id="incomeExpenseChart"></canvas></div>
+    <!-- Charts row 2 -->
+    <div class="chart-grid">
+        <div class="card">
+            <div class="card-title">📊 Income vs Expenses by Month</div>
+            <div class="chart-container"><canvas id="incomeExpenseChart"></canvas></div>
+        </div>
+        <div class="card">
+            <div class="card-title">🏷️ Top Spending Categories</div>
+            <div class="chart-container"><canvas id="categoryChart"></canvas></div>
+        </div>
     </div>
 
-    <div class="card" style="margin-top:20px;">
-        <div class="card-title">🤖 AI Insights</div>
-        <ul id="insightsList" style="padding-left:18px;line-height:2;color:#374151;font-size:14px;"></ul>
+    <!-- Savings progress chart -->
+    <div class="card">
+        <div class="card-title">🎯 Savings Goals Progress</div>
+        <div class="chart-container"><canvas id="savingsChart"></canvas></div>
     </div>
+
+    <!-- Savings goal mini cards -->
+    <div class="card">
+        <div class="card-title">🎯 Goals Overview</div>
+        <div class="goal-card-grid" id="goalCards"></div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="card">
+        <div class="card-title">🤖 AI Financial Insights</div>
+        <div id="insightsList"></div>
+    </div>
+
 </div>
 
 <script th:src="@{/js/dashboard.js}"></script>
 <script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebarOverlay").classList.toggle("active");
+}
 function logout() {
     localStorage.removeItem("token");
     window.location.href = "/";

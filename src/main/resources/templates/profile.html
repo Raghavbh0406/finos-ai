@@ -5,12 +5,10 @@
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
-
-<div class="sidebar">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-icon">💰</div>
-        <span class="sidebar-brand-name">FinOS AI</span>
-    </div>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
     <div class="sidebar-section-label">Main</div>
     <a href="/dashboard-page">📊 Dashboard</a>
     <a href="/income-page">💰 Income</a>
@@ -24,15 +22,8 @@
     <div class="sidebar-spacer"></div>
     <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
 </div>
-
 <div class="main-content">
-    <div class="page-header">
-        <div>
-            <div class="page-title">Profile</div>
-            <div class="page-subtitle">Your account information</div>
-        </div>
-    </div>
-
+    <div class="page-header"><div><div class="page-title">Profile</div><div class="page-subtitle">Your account information</div></div></div>
     <div class="card" style="max-width:480px;">
         <div class="card-title">👤 Profile Information</div>
         <div style="display:flex;align-items:center;gap:20px;margin-bottom:28px;">
@@ -44,11 +35,11 @@
         </div>
         <div style="border-top:1px solid #f1f5f9;padding-top:20px;display:flex;flex-direction:column;gap:14px;">
             <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:13px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">Full Name</span>
+                <span style="font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">Full Name</span>
                 <span style="font-size:14px;font-weight:500;color:#0f172a;" id="profileName">—</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:13px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">Email</span>
+                <span style="font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;">Email</span>
                 <span style="font-size:14px;font-weight:500;color:#0f172a;" id="profileEmail">—</span>
             </div>
         </div>
@@ -57,28 +48,26 @@
         </div>
     </div>
 </div>
-
 <script src="/js/profile.js"></script>
 <script>
-function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "/";
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebarOverlay").classList.toggle("active");
 }
-// Enhance profile page with avatar initial after profile loads
-const origLoad = window.onload;
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-        const nameEl = document.getElementById('name');
-        const emailEl = document.getElementById('email');
-        const avatarEl = document.getElementById('avatarInitial');
-        const profName = document.getElementById('profileName');
-        const profEmail = document.getElementById('profileEmail');
-        if (nameEl && nameEl.textContent && nameEl.textContent !== 'Loading...') {
-            if (avatarEl) avatarEl.textContent = nameEl.textContent.charAt(0).toUpperCase();
-            if (profName) profName.textContent = nameEl.textContent;
+        const n = document.getElementById('name');
+        const e = document.getElementById('email');
+        const a = document.getElementById('avatarInitial');
+        const pn = document.getElementById('profileName');
+        const pe = document.getElementById('profileEmail');
+        if (n && n.textContent && n.textContent !== 'Loading...') {
+            if (a) a.textContent = n.textContent.charAt(0).toUpperCase();
+            if (pn) pn.textContent = n.textContent;
         }
-        if (emailEl && emailEl.textContent && emailEl.textContent !== 'Loading...') {
-            if (profEmail) profEmail.textContent = emailEl.textContent;
+        if (e && e.textContent !== 'Loading...') {
+            if (pe) pe.textContent = e.textContent;
         }
     }, 800);
 });

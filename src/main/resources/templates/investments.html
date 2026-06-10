@@ -5,12 +5,10 @@
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
-
-<div class="sidebar">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-icon">💰</div>
-        <span class="sidebar-brand-name">FinOS AI</span>
-    </div>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
     <div class="sidebar-section-label">Main</div>
     <a href="/dashboard-page">📊 Dashboard</a>
     <a href="/income-page">💰 Income</a>
@@ -24,63 +22,35 @@
     <div class="sidebar-spacer"></div>
     <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
 </div>
-
 <div class="main-content">
-    <div class="page-header">
-        <div>
-            <div class="page-title">Investments</div>
-            <div class="page-subtitle">Monitor and grow your portfolio</div>
-        </div>
-    </div>
-
+    <div class="page-header"><div><div class="page-title">Investments</div><div class="page-subtitle">Monitor and grow your portfolio</div></div></div>
     <div class="card">
         <div class="card-title">➕ Add / Edit Investment</div>
         <div class="form-grid">
-            <div class="form-field">
-                <label for="investmentType">Type</label>
-                <input type="text" id="investmentType" placeholder="e.g. Mutual Fund">
-            </div>
-            <div class="form-field">
-                <label for="investmentName">Name</label>
-                <input type="text" id="investmentName" placeholder="e.g. Nifty 50 Index">
-            </div>
-            <div class="form-field">
-                <label for="investedAmount">Invested Amount (₹)</label>
-                <input type="number" id="investedAmount" placeholder="0.00">
-            </div>
-            <div class="form-field">
-                <label for="currentValue">Current Value (₹)</label>
-                <input type="number" id="currentValue" placeholder="0.00">
-            </div>
-            <div class="form-field" style="align-self:end;">
-                <button class="btn btn-primary" onclick="saveInvestment()">Save Investment</button>
-            </div>
+            <div class="form-field"><label>Type</label><input type="text" id="investmentType" placeholder="e.g. Mutual Fund"></div>
+            <div class="form-field"><label>Name</label><input type="text" id="investmentName" placeholder="e.g. Nifty 50 Index"></div>
+            <div class="form-field"><label>Invested Amount (₹)</label><input type="number" id="investedAmount" placeholder="0.00"></div>
+            <div class="form-field"><label>Current Value (₹)</label><input type="number" id="currentValue" placeholder="0.00"></div>
+            <div class="form-field" style="align-self:end;"><button class="btn btn-primary" onclick="saveInvestment()">💾 Save Investment</button></div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-title">📋 Investment List</div>
-        <table id="investmentTable">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Name</th>
-                    <th>Invested Amount</th>
-                    <th>Current Value</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="table-wrap">
+            <table id="investmentTable">
+                <thead><tr><th>Type</th><th>Name</th><th>Invested</th><th>Current Value</th><th>Gain/Loss</th><th>Actions</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
-
 <script src="/js/investments.js"></script>
 <script>
-function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "/";
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebarOverlay").classList.toggle("active");
 }
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
 </script>
 </body>
 </html>
