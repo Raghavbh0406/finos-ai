@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Retirement Planner — FinOS AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Tools</div>
+    <a href="/sip-calculator-page">📐 SIP Calculator</a>
+    <a href="/loan-calculator-page">🏦 Loan / EMI</a>
+    <a href="/tax-calculator-page">🧾 Tax Calculator</a>
+    <a href="/retirement-calculator-page" class="active">👴 Retirement</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
+</div>
+
+<div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Retirement Planner</div>
+            <div class="page-subtitle">Plan your retirement corpus and see if you're on track</div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <!-- Inputs -->
+        <div class="card">
+            <div class="card-title">👴 Retirement Details</div>
+
+            <div class="form-field" style="margin-bottom:20px;">
+                <label>Current Age</label>
+                <input type="number" id="currentAge" value="25" oninput="updateSlider('currentAge','s1',18,60); calculate()">
+                <input type="range" id="s1" min="18" max="60" step="1" value="25"
+                    oninput="syncInput('s1','currentAge'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>18</span><span>60</span></div>
+            </div>
+
+            <div class="form-field" style="margin-bottom:20px;">
+                <label>Retirement Age</label>
+                <input type="number" id="retirementAge" value="60" oninput="updateSlider('retirementAge','s2',40,80); calculate()">
+                <input type="range" id="s2" min="40" max="80" step="1" value="60"
+                    oninput="syncInput('s2','retirementAge'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>40</span><span>80</span></div>
+            </div>
+
+            <div class="form-field" style="margin-bottom:20px;">
+                <label>Monthly Investment (₹)</label>
+                <input type="number" id="monthlyInvestment" value="10000" oninput="updateSlider('monthlyInvestment','s3',500,200000); calculate()">
+                <input type="range" id="s3" min="500" max="200000" step="500" value="10000"
+                    oninput="syncInput('s3','monthlyInvestment'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>₹500</span><span>₹2L</span></div>
+            </div>
+
+            <div class="form-field" style="margin-bottom:24px;">
+                <label>Expected Annual Return (%)</label>
+                <input type="number" id="expectedReturn" value="12" oninput="updateSlider('expectedReturn','s4',1,25); calculate()">
+                <input type="range" id="s4" min="1" max="25" step="0.5" value="12"
+                    oninput="syncInput('s4','expectedReturn'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>1%</span><span>25%</span></div>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="calculate()">Plan Retirement</button>
+        </div>
+
+        <!-- Results -->
+        <div>
+            <div class="stat-grid" style="grid-template-columns:1fr;gap:12px;margin-bottom:16px;">
+                <div class="stat-card" style="border-left:4px solid #8b5cf6;">
+                    <div class="stat-label">Retirement Corpus</div>
+                    <div class="stat-value blue" id="res-corpus" style="font-size:24px;">₹0</div>
+                </div>
+                <div class="stat-card" style="border-left:4px solid #64748b;">
+                    <div class="stat-label">Years to Retire</div>
+                    <div class="stat-value" id="res-years">0</div>
+                </div>
+                <div class="stat-card" style="border-left:4px solid #2563eb;">
+                    <div class="stat-label">Total Amount Invested</div>
+                    <div class="stat-value" id="res-invested">₹0</div>
+                </div>
+                <div class="stat-card" style="border-left:4px solid #16a34a;">
+                    <div class="stat-label">Wealth Gained</div>
+                    <div class="stat-value positive" id="res-gain">₹0</div>
+                </div>
+                <div class="stat-card" style="border-left:4px solid #f59e0b;">
+                    <div class="stat-label">Monthly Pension (4% rule)</div>
+                    <div class="stat-value" id="res-pension">₹0</div>
+                </div>
+            </div>
+
+            <div class="card" style="padding:16px;">
+                <div class="card-title" style="margin-bottom:10px;">Invested vs Returns</div>
+                <div style="max-height:170px;"><canvas id="retireDonut"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Growth chart -->
+    <div class="card" style="margin-top:4px;">
+        <div class="card-title">📈 Corpus Growth Over Years</div>
+        <div class="chart-container"><canvas id="retireGrowth"></canvas></div>
+    </div>
+
+    <!-- Info -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:4px;">
+        <div class="card" style="padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">💡 4% Withdrawal Rule</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;">You can safely withdraw 4% of your corpus per year in retirement without running out of money for 30+ years.</div>
+        </div>
+        <div class="card" style="padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">🌟 Start Early</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;">Starting 10 years earlier can double your final corpus due to compounding. Time in market beats timing the market.</div>
+        </div>
+        <div class="card" style="padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;" id="readiness-title">📊 Readiness</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;" id="readiness-text">Enter your details above.</div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/retirement-calculator.js"></script>
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebarOverlay").classList.toggle("active");
+}
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
+function updateSlider(inputId, sliderId, min, max) {
+    const val = Math.min(Math.max(Number(document.getElementById(inputId).value), min), max);
+    document.getElementById(sliderId).value = val;
+}
+function syncInput(sliderId, inputId) {
+    document.getElementById(inputId).value = document.getElementById(sliderId).value;
+}
+</script>
+</body>
+</html>

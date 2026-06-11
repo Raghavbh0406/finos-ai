@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SIP Calculator — FinOS AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Tools</div>
+    <a href="/sip-calculator-page" class="active">📐 SIP Calculator</a>
+    <a href="/loan-calculator-page">🏦 Loan / EMI</a>
+    <a href="/tax-calculator-page">🧾 Tax Calculator</a>
+    <a href="/retirement-calculator-page">👴 Retirement</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
+</div>
+
+<div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">SIP Calculator</div>
+            <div class="page-subtitle">Project your mutual fund returns over time</div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <!-- Inputs -->
+        <div class="card">
+            <div class="card-title">📐 Calculator Inputs</div>
+
+            <div class="form-field" style="margin-bottom:20px;">
+                <label>Monthly Investment (₹)</label>
+                <input type="number" id="monthlyInvestment" value="5000" oninput="updateSlider('monthlyInvestment','s1',500,100000); calculate()">
+                <input type="range" id="s1" min="500" max="100000" step="500" value="5000"
+                    oninput="syncInput('s1','monthlyInvestment'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>₹500</span><span>₹1,00,000</span></div>
+            </div>
+
+            <div class="form-field" style="margin-bottom:20px;">
+                <label>Investment Duration (Years)</label>
+                <input type="number" id="years" value="10" oninput="updateSlider('years','s2',1,40); calculate()">
+                <input type="range" id="s2" min="1" max="40" step="1" value="10"
+                    oninput="syncInput('s2','years'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>1 yr</span><span>40 yrs</span></div>
+            </div>
+
+            <div class="form-field" style="margin-bottom:24px;">
+                <label>Expected Annual Return (%)</label>
+                <input type="number" id="expectedReturn" value="12" oninput="updateSlider('expectedReturn','s3',1,30); calculate()">
+                <input type="range" id="s3" min="1" max="30" step="0.5" value="12"
+                    oninput="syncInput('s3','expectedReturn'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>1%</span><span>30%</span></div>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="calculate()">Calculate Returns</button>
+        </div>
+
+        <!-- Results -->
+        <div>
+            <div class="stat-grid" style="grid-template-columns:1fr;gap:12px;margin-bottom:16px;">
+                <div class="stat-card" style="border-left:4px solid #2563eb;">
+                    <div class="stat-label">Invested Amount</div>
+                    <div class="stat-value" id="res-invested">₹0</div>
+                </div>
+                <div class="stat-card" style="border-left:4px solid #16a34a;">
+                    <div class="stat-label">Estimated Returns</div>
+                    <div class="stat-value positive" id="res-returns">₹0</div>
+                </div>
+                <div class="stat-card" style="border-left:4px solid #8b5cf6;">
+                    <div class="stat-label">Total Value at Maturity</div>
+                    <div class="stat-value blue" id="res-total" style="font-size:26px;">₹0</div>
+                </div>
+            </div>
+
+            <!-- Donut -->
+            <div class="card" style="padding:16px;">
+                <div class="card-title" style="margin-bottom:10px;">Invested vs Returns</div>
+                <div style="max-height:200px;"><canvas id="sipDonut"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Growth chart -->
+    <div class="card" style="margin-top:4px;">
+        <div class="card-title">📈 Year-by-Year Growth</div>
+        <div class="chart-container"><canvas id="sipGrowth"></canvas></div>
+    </div>
+
+    <!-- Info cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:4px;">
+        <div class="card" style="padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">💡 What is SIP?</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;">Systematic Investment Plan lets you invest a fixed amount every month in mutual funds, benefiting from rupee cost averaging and compounding.</div>
+        </div>
+        <div class="card" style="padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">📊 Rule of 72</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;" id="rule72">At 12% return, your money doubles every ~6 years.</div>
+        </div>
+        <div class="card" style="padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">🎯 Power of Compounding</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;" id="compoundTip">The longer you stay invested, the more compounding works in your favour.</div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/sip-calculator.js"></script>
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebarOverlay").classList.toggle("active");
+}
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
+function updateSlider(inputId, sliderId, min, max) {
+    const val = Math.min(Math.max(Number(document.getElementById(inputId).value), min), max);
+    document.getElementById(sliderId).value = val;
+}
+function syncInput(sliderId, inputId) {
+    document.getElementById(inputId).value = document.getElementById(sliderId).value;
+}
+</script>
+</body>
+</html>

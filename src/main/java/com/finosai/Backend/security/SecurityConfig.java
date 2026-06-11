@@ -46,6 +46,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http)
                             "/profile-page",
                             "/change-password-page",
 
+                            "/sip-calculator-page",
+                            "/loan-calculator-page",
+                            "/tax-calculator-page",
+                            "/retirement-calculator-page",
+
                             "/css/**",
                             "/js/**",
 
