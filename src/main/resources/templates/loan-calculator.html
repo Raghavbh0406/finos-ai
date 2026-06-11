@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Loan / EMI Calculator — FinOS AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Tools</div>
+    <a href="/sip-calculator-page">📐 SIP Calculator</a>
+    <a href="/loan-calculator-page" class="active">🏦 Loan / EMI</a>
+    <a href="/tax-calculator-page">🧾 Tax Calculator</a>
+    <a href="/retirement-calculator-page">👴 Retirement</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
+</div>
+
+<div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Loan / EMI Calculator</div>
+            <div class="page-subtitle">Calculate your monthly EMI and total interest payable</div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <!-- Inputs -->
+        <div class="card">
+            <div class="card-title">🏦 Loan Details</div>
+
+            <div class="form-field" style="margin-bottom:20px;">
+                <label>Loan Amount (₹)</label>
+                <input type="number" id="loanAmount" value="1000000" oninput="updateSlider('loanAmount','s1',10000,10000000); calculate()">
+                <input type="range" id="s1" min="10000" max="10000000" step="10000" value="1000000"
+                    oninput="syncInput('s1','loanAmount'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>₹10K</span><span>₹1 Cr</span></div>
+            </div>
+
+            <div class="form-field" style="margin-bottom:20px;">
+                <label>Annual Interest Rate (%)</label>
+                <input type="number" id="interestRate" value="8.5" oninput="updateSlider('interestRate','s2',1,25); calculate()">
+                <input type="range" id="s2" min="1" max="25" step="0.1" value="8.5"
+                    oninput="syncInput('s2','interestRate'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>1%</span><span>25%</span></div>
+            </div>
+
+            <div class="form-field" style="margin-bottom:24px;">
+                <label>Loan Tenure (Years)</label>
+                <input type="number" id="tenureYears" value="20" oninput="updateSlider('tenureYears','s3',1,30); calculate()">
+                <input type="range" id="s3" min="1" max="30" step="1" value="20"
+                    oninput="syncInput('s3','tenureYears'); calculate()"
+                    style="width:100%;margin-top:8px;accent-color:#2563eb;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>1 yr</span><span>30 yrs</span></div>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="calculate()">Calculate EMI</button>
+        </div>
+
+        <!-- Results -->
+        <div>
+            <div class="stat-grid" style="grid-template-columns:1fr;gap:12px;margin-bottom:16px;">
+                <div class="stat-card" style="border-left:4px solid #2563eb;">
+                    <div class="stat-label">Monthly EMI</div>
+                    <div class="stat-value blue" id="res-emi" style="font-size:28px;">₹0</div>
+                </div>
+                <div class="stat-card" style="border-left:4px solid #64748b;">
+                    <div class="stat-label">Principal Amount</div>
+                    <div class="stat-value" id="res-principal">₹0</div>
+                </div>
+                <div class="stat-card" style="border-left:4px solid #ef4444;">
+                    <div class="stat-label">Total Interest Payable</div>
+                    <div class="stat-value negative" id="res-interest">₹0</div>
+                </div>
+                <div class="stat-card" style="border-left:4px solid #0f172a;">
+                    <div class="stat-label">Total Amount Payable</div>
+                    <div class="stat-value" id="res-total">₹0</div>
+                </div>
+            </div>
+            <div class="card" style="padding:16px;">
+                <div class="card-title" style="margin-bottom:10px;">Principal vs Interest</div>
+                <div style="max-height:180px;"><canvas id="loanDonut"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Amortization chart -->
+    <div class="card" style="margin-top:4px;">
+        <div class="card-title">📉 Outstanding Balance Over Time</div>
+        <div class="chart-container"><canvas id="loanBalance"></canvas></div>
+    </div>
+
+    <!-- Info -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:4px;">
+        <div class="card" style="padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">💡 EMI Tip</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;">Paying even 1 extra EMI per year can reduce your loan tenure significantly and save lakhs in interest.</div>
+        </div>
+        <div class="card" style="padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">📊 Interest Share</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;" id="interestShare">—</div>
+        </div>
+        <div class="card" style="padding:16px;">
+            <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">🏠 Common Loan Types</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.6;">Home: 8–9% • Car: 9–11% • Personal: 12–18% • Education: 8–13%</div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/loan-calculator.js"></script>
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebarOverlay").classList.toggle("active");
+}
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
+function updateSlider(inputId, sliderId, min, max) {
+    const val = Math.min(Math.max(Number(document.getElementById(inputId).value), min), max);
+    document.getElementById(sliderId).value = val;
+}
+function syncInput(sliderId, inputId) {
+    document.getElementById(inputId).value = document.getElementById(sliderId).value;
+}
+</script>
+</body>
+</html>
