@@ -51,6 +51,10 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http)
                             "/tax-calculator-page",
                             "/retirement-calculator-page",
 
+                            "/subscriptions-page",
+                            "/reports-page",
+                            "/forecast-page",
+
                             "/css/**",
                             "/js/**",
 

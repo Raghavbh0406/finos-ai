@@ -48,4 +48,13 @@ public String taxCalculator() { return "tax-calculator"; }
 @GetMapping("/retirement-calculator-page")
 public String retirementCalculator() { return "retirement-calculator"; }
 
+@GetMapping("/subscriptions-page")
+public String subscriptions() { return "subscriptions"; }
+
+@GetMapping("/reports-page")
+public String reports() { return "reports"; }
+
+@GetMapping("/forecast-page")
+public String forecast() { return "forecast"; }
+
 }

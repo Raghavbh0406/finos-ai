@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Financial Reports — FinOS AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <a href="/subscriptions-page">📱 Subscriptions</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Tools</div>
+    <a href="/sip-calculator-page">📐 SIP Calculator</a>
+    <a href="/loan-calculator-page">🏦 Loan / EMI</a>
+    <a href="/tax-calculator-page">🧾 Tax Calculator</a>
+    <a href="/retirement-calculator-page">👴 Retirement</a>
+    <a href="/reports-page" class="active">📋 Reports</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
+</div>
+
+<div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Financial Reports</div>
+            <div class="page-subtitle">Monthly summary of your financial activity</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+            <select id="monthSelect" onchange="loadReport()" style="padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;outline:none;">
+            </select>
+            <button class="btn btn-secondary" onclick="printReport()">🖨️ Print</button>
+        </div>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="stat-grid" id="reportStats"></div>
+
+    <!-- Charts row -->
+    <div class="chart-grid" style="margin-top:20px;">
+        <div class="card">
+            <div class="card-title">🍩 Spending by Category</div>
+            <div class="chart-container"><canvas id="reportCatChart"></canvas></div>
+        </div>
+        <div class="card">
+            <div class="card-title">📊 Income vs Expenses</div>
+            <div class="chart-container"><canvas id="reportBarChart"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Top expenses table -->
+    <div class="card">
+        <div class="card-title">💸 Top Expenses This Month</div>
+        <div class="table-wrap">
+            <table id="reportTable">
+                <thead><tr><th>#</th><th>Title</th><th>Category</th><th>Amount</th><th>Date</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Budget status -->
+    <div class="card">
+        <div class="card-title">📋 Budget Status</div>
+        <div id="budgetStatus"></div>
+    </div>
+
+    <!-- AI monthly summary -->
+    <div class="card">
+        <div class="card-title">🤖 Monthly AI Summary</div>
+        <div id="monthlySummary"></div>
+    </div>
+</div>
+
+<script src="/js/reports.js"></script>
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebarOverlay").classList.toggle("active");
+}
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
+function printReport() { window.print(); }
+</script>
+</body>
+</html>
