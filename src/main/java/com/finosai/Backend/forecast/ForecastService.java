@@ -14,9 +14,7 @@ public class ForecastService {
 
     public ForecastService(
             ExpenseRepository expenseRepository) {
-
-        this.expenseRepository =
-                expenseRepository;
+        this.expenseRepository = expenseRepository;
     }
 
     public ForecastResponse getForecast() {
@@ -28,27 +26,20 @@ public class ForecastService {
 
         double currentMonthSpent =
                 expenses.stream()
-                        .filter(e ->
-                                e.getDate()
-                                        .getMonth()
-                                        .equals(
-                                                now.getMonth()
-                                        ))
-                        .mapToDouble(
-                                Expense::getAmount)
+                        .filter(e -> e.getDate() != null &&
+                                e.getDate().getMonth()
+                                        .equals(now.getMonth()) &&
+                                e.getDate().getYear() == now.getYear())
+                        .mapToDouble(Expense::getAmount)
                         .sum();
 
-        int currentDay =
-                now.getDayOfMonth();
+        int currentDay = now.getDayOfMonth();
 
         double forecastedSpend = 0;
 
         if (currentDay > 0) {
-
             forecastedSpend =
-                    (currentMonthSpent /
-                            currentDay)
-                            * 30;
+                    (currentMonthSpent / currentDay) * 30;
         }
 
         return new ForecastResponse(
