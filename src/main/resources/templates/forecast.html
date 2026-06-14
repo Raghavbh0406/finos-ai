@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spending Forecast — FinOS AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <a href="/subscriptions-page">📱 Subscriptions</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Tools</div>
+    <a href="/sip-calculator-page">📐 SIP Calculator</a>
+    <a href="/loan-calculator-page">🏦 Loan / EMI</a>
+    <a href="/tax-calculator-page">🧾 Tax Calculator</a>
+    <a href="/retirement-calculator-page">👴 Retirement</a>
+    <a href="/reports-page">📋 Reports</a>
+    <a href="/forecast-page" class="active">🔮 Forecast</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
+</div>
+
+<div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Spending Forecast</div>
+            <div class="page-subtitle">Predict your month-end spending based on current daily rate</div>
+        </div>
+    </div>
+
+    <!-- Forecast alert banner -->
+    <div id="forecastAlert" style="display:none;margin-bottom:20px;">
+        <span class="insight-icon">🔮</span>
+        <span class="insight-text" id="forecastAlertText"></span>
+    </div>
+
+    <!-- Budget progress bar -->
+    <div class="card" style="margin-bottom:20px;">
+        <div class="card-title">📊 Month-end Budget Projection</div>
+        <div class="progress-bar" style="height:14px;border-radius:8px;margin-bottom:8px;">
+            <div class="progress-fill" id="forecastBar" style="height:14px;border-radius:8px;width:0%;transition:width 1s ease;"></div>
+        </div>
+        <div style="font-size:13px;color:#64748b;text-align:right;" id="forecastPct">0% of budget</div>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="stat-grid" style="margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-label">Spent So Far</div><div class="stat-value negative" id="spentSoFar">₹0</div></div>
+        <div class="stat-card"><div class="stat-label">Daily Avg Spend</div><div class="stat-value" id="dailyRate">₹0</div></div>
+        <div class="stat-card"><div class="stat-label">Projected Month-End</div><div class="stat-value" id="projectedExp">₹0</div></div>
+        <div class="stat-card"><div class="stat-label">Days Remaining</div><div class="stat-value blue" id="daysLeft">0</div></div>
+        <div class="stat-card"><div class="stat-label">Remaining Budget</div><div class="stat-value positive" id="remainingBudget">₹0</div></div>
+        <div class="stat-card"><div class="stat-label">Safe to Spend/Day</div><div class="stat-value positive" id="safeToSpend">₹0</div></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-grid">
+        <div class="card">
+            <div class="card-title">📅 Daily Spending — Last 14 Days</div>
+            <div class="chart-container"><canvas id="dailyChart"></canvas></div>
+        </div>
+        <div class="card">
+            <div class="card-title">🔮 Month Projection</div>
+            <div class="chart-container"><canvas id="projectionChart"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Category forecast -->
+    <div class="card">
+        <div class="card-title">🏷️ Category-wise Forecast</div>
+        <div id="catForecast"></div>
+    </div>
+</div>
+
+<script src="/js/forecast.js"></script>
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebarOverlay").classList.toggle("active");
+}
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
+</script>
+</body>
+</html>
