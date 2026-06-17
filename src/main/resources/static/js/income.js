@@ -1,64 +1,69 @@
-document.addEventListener("DOMContentLoaded", loadExpenses);
+document.addEventListener("DOMContentLoaded", () => { if (checkTokenExpiry()) loadIncome(); });
 let editingId = null;
 
-async function loadExpenses() {
+async function loadIncome() {
     const token = localStorage.getItem("token");
-    if (!token) { window.location.href = "/"; return; }
+    const tbody = document.querySelector("#incomeTable tbody");
+    tbody.innerHTML = skeletonRows(3, 4);
     try {
-        const expenses = await fetch("/api/expenses", { headers: { "Authorization": "Bearer " + token } }).then(r => r.json());
-        const tbody = document.querySelector("#expenseTable tbody");
+        const list = await fetch("/api/income", { headers: { "Authorization": "Bearer " + token } }).then(r => r.json());
         tbody.innerHTML = "";
-        if (!expenses.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#64748b;padding:24px;">No expenses yet. Add one above!</td></tr>'; return; }
-        expenses.forEach(e => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td><strong>${e.title}</strong></td>
-                <td style="color:#dc2626;font-weight:600;">₹${Number(e.amount).toLocaleString("en-IN")}</td>
-                <td><span class="badge badge-blue">${e.category}</span></td>
-                <td style="color:#64748b;">${e.date || "—"}</td>
+        if (!list.length) {
+            tbody.innerHTML = `<tr><td colspan="4">${emptyState("💰", "No income recorded", "Add your salary, freelance or other income sources.", "➕ Add Income", "#")}</td></tr>`;
+            return;
+        }
+        list.forEach(i => {
+            tbody.innerHTML += `<tr>
+                <td><strong>${i.source}</strong></td>
+                <td style="color:#16a34a;font-weight:600;">₹${Number(i.amount).toLocaleString("en-IN")}</td>
+                <td style="color:#64748b;">${i.date || "—"}</td>
                 <td style="display:flex;gap:6px;">
-                    <button class="btn btn-warning" onclick="editExpense(${e.id})">✏️ Edit</button>
-                    <button class="btn btn-danger" onclick="deleteExpense(${e.id})">🗑 Delete</button>
-                </td>`;
-            tbody.appendChild(row);
+                    <button class="btn btn-warning" onclick="editIncome(${i.id})">✏️ Edit</button>
+                    <button class="btn btn-danger"  onclick="confirmDelete(${i.id})">🗑 Delete</button>
+                </td></tr>`;
         });
-    } catch (err) { console.error(err); }
+    } catch { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#dc2626;padding:20px;">Failed to load income.</td></tr>`; }
 }
 
-async function addExpense() {
-    const token = localStorage.getItem("token");
-    const expense = {
-        title: document.getElementById("title").value,
-        amount: Number(document.getElementById("amount").value),
-        category: document.getElementById("category").value,
-        date: new Date().toISOString().split("T")[0]
-    };
-    if (!expense.title || !expense.amount) { alert("Please fill in title and amount."); return; }
+async function addIncome() {
+    const token  = localStorage.getItem("token");
+    const source = document.getElementById("source").value.trim();
+    const amount = Number(document.getElementById("amount").value);
+    const date   = document.getElementById("date").value;
+    if (!source || !amount || !date) { showToast("Please fill in all fields.", "warning"); return; }
     try {
-        const url = editingId ? "/api/expenses/" + editingId : "/api/expenses";
+        const url    = editingId ? "/api/income/" + editingId : "/api/income";
         const method = editingId ? "PUT" : "POST";
-        await fetch(url, { method, headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token }, body: JSON.stringify(expense) });
+        await fetch(url, { method, headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token }, body: JSON.stringify({ source, amount, date }) });
+        showToast(editingId ? "Income updated!" : "Income added!", "success");
         editingId = null;
-        document.getElementById("title").value = "";
+        document.getElementById("source").value = "";
         document.getElementById("amount").value = "";
-        document.getElementById("category").value = "";
-        loadExpenses();
-    } catch (err) { alert("Failed to save expense."); }
+        document.getElementById("date").value   = "";
+        document.querySelector(".btn-primary").textContent = "💾 Save Income";
+        loadIncome();
+    } catch { showToast("Failed to save income.", "error"); }
 }
 
-async function editExpense(id) {
+async function editIncome(id) {
     const token = localStorage.getItem("token");
-    const expense = await fetch("/api/expenses/" + id, { headers: { "Authorization": "Bearer " + token } }).then(r => r.json());
+    const list  = await fetch("/api/income", { headers: { "Authorization": "Bearer " + token } }).then(r => r.json());
+    const income = list.find(i => i.id === id);
     editingId = id;
-    document.getElementById("title").value = expense.title;
-    document.getElementById("amount").value = expense.amount;
-    document.getElementById("category").value = expense.category;
-    document.getElementById("title").focus();
+    document.getElementById("source").value = income.source;
+    document.getElementById("amount").value = income.amount;
+    document.getElementById("date").value   = income.date;
+    document.querySelector(".btn-primary").textContent = "💾 Update Income";
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-async function deleteExpense(id) {
-    if (!confirm("Delete this expense?")) return;
+function confirmDelete(id) { showConfirm("This income record will be permanently deleted.", () => deleteIncome(id)); }
+
+async function deleteIncome(id) {
     const token = localStorage.getItem("token");
-    await fetch("/api/expenses/" + id, { method: "DELETE", headers: { "Authorization": "Bearer " + token } });
-    loadExpenses();
+    try {
+        await fetch("/api/income/" + id, { method: "DELETE", headers: { "Authorization": "Bearer " + token } });
+        showToast("Income deleted.", "success");
+        loadIncome();
+    } catch { showToast("Failed to delete income.", "error"); }
 }

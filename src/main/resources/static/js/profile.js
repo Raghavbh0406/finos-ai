@@ -1,79 +1,18 @@
-document.addEventListener(
-"DOMContentLoaded",
-loadProfile
-);
+document.addEventListener("DOMContentLoaded", () => { if (checkTokenExpiry()) loadProfile(); });
 
 async function loadProfile() {
-
-
-const token =
-    localStorage.getItem(
-        "token"
-    );
-
-if (!token) {
-
-    window.location.href =
-        "/";
-
-    return;
-}
-
-try {
-
-    const response =
-        await fetch(
-            "/api/users/profile",
-            {
-                headers: {
-                    "Authorization":
-                        "Bearer " + token
-                }
-            }
-        );
-
-    if (!response.ok) {
-
-        throw new Error(
-            "Failed to load profile"
-        );
-    }
-
-    const user =
-        await response.json();
-
-    document.getElementById(
-        "name"
-    ).innerText =
-        user.name;
-
-    document.getElementById(
-        "email"
-    ).innerText =
-        user.email;
-
-} catch (error) {
-
-    console.error(
-        error
-    );
-
-    alert(
-        "Failed to load profile"
-    );
-}
-
-
-}
-
-function logout() {
-
-
-localStorage.removeItem(
-    "token"
-);
-
-window.location.href =
-    "/";
-
+    const token = localStorage.getItem("token");
+    try {
+        const user = await fetch("/api/users/profile", { headers: { "Authorization": "Bearer " + token } }).then(r => r.json());
+        const nameEl    = document.getElementById("name");
+        const emailEl   = document.getElementById("email");
+        const avatarEl  = document.getElementById("avatarInitial");
+        const profName  = document.getElementById("profileName");
+        const profEmail = document.getElementById("profileEmail");
+        if (nameEl)    nameEl.textContent    = user.name;
+        if (emailEl)   emailEl.textContent   = user.email;
+        if (avatarEl)  avatarEl.textContent  = user.name ? user.name.charAt(0).toUpperCase() : "?";
+        if (profName)  profName.textContent  = user.name;
+        if (profEmail) profEmail.textContent = user.email;
+    } catch { showToast("Failed to load profile.", "error"); }
 }

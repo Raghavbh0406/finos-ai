@@ -50,6 +50,11 @@
         </div>
     </div>
 
+    <!-- Greeting -->
+    <div id="dashGreeting" style="margin-bottom:24px;">
+        <div style="font-size:24px;font-weight:700;color:#0f172a;">Loading...</div>
+    </div>
+
     <!-- Stat grid -->
     <div class="stat-grid">
         <div class="stat-card"><div class="stat-label">Total Income</div><div class="stat-value positive" id="totalIncome">₹0</div></div>
@@ -172,6 +177,7 @@
 
 </div>
 
+<script src="/js/ui.js"></script>
 <script th:src="@{/js/dashboard.js}"></script>
 <script src="/js/streak.js"></script>
 <script>
@@ -183,7 +189,7 @@ function logout() {
     localStorage.removeItem("token");
     window.location.href = "/";
 }
-document.addEventListener("DOMContentLoaded", () => { setTimeout(loadStreak, 500); loadForecastBanner(); });
+document.addEventListener("DOMContentLoaded", () => { loadGreeting(); setTimeout(loadStreak, 500); loadForecastBanner(); });
 
 async function loadForecastBanner() {
     const token = localStorage.getItem("token");
