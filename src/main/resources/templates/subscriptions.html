@@ -22,6 +22,8 @@
     <a href="/loan-calculator-page">🏦 Loan / EMI</a>
     <a href="/tax-calculator-page">🧾 Tax Calculator</a>
     <a href="/retirement-calculator-page">👴 Retirement</a>
+    <a href="/reports-page">📋 Reports</a>
+    <a href="/forecast-page">🔮 Forecast</a>
     <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
     <a href="/profile-page">👤 Profile</a>
     <a href="/change-password-page">🔐 Change Password</a>
@@ -37,7 +39,6 @@
         </div>
     </div>
 
-    <!-- Summary cards -->
     <div class="stat-grid" style="margin-bottom:20px;">
         <div class="stat-card"><div class="stat-label">Monthly Total</div><div class="stat-value negative" id="monthlyTotal">₹0</div></div>
         <div class="stat-card"><div class="stat-label">Annual Total</div><div class="stat-value" id="annualTotal">₹0</div></div>
@@ -45,7 +46,6 @@
         <div class="stat-card"><div class="stat-label">Due This Week</div><div class="stat-value" id="dueThisWeek" style="color:#f59e0b;">0</div></div>
     </div>
 
-    <!-- Add form -->
     <div class="card">
         <div class="card-title">➕ Add Subscription</div>
         <div class="form-grid">
@@ -67,16 +67,13 @@
         </div>
     </div>
 
-    <!-- Due soon alert -->
-    <div id="dueAlert" style="display:none;" class="card" style="border-left:4px solid #f59e0b;background:#fffbeb;">
+    <div id="dueAlert" class="card" style="display:none;border-left:4px solid #f59e0b;background:#fffbeb;">
         <div class="card-title" style="color:#d97706;">⚠️ Due Soon</div>
         <div id="dueAlertList"></div>
     </div>
 
-    <!-- Subscriptions grid -->
     <div id="subGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:20px;"></div>
 
-    <!-- Popular services quick-add -->
     <div class="card">
         <div class="card-title">⚡ Quick Add Popular Services</div>
         <div style="display:flex;flex-wrap:wrap;gap:10px;">

@@ -56,6 +56,7 @@
         </div>
     </div>
 </div>
+<script src="/js/ui.js"></script>
 <script src="/js/profile.js"></script>
 <script>
 function toggleSidebar() {
@@ -63,22 +64,7 @@ function toggleSidebar() {
     document.getElementById("sidebarOverlay").classList.toggle("active");
 }
 function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        const n = document.getElementById('name');
-        const e = document.getElementById('email');
-        const a = document.getElementById('avatarInitial');
-        const pn = document.getElementById('profileName');
-        const pe = document.getElementById('profileEmail');
-        if (n && n.textContent && n.textContent !== 'Loading...') {
-            if (a) a.textContent = n.textContent.charAt(0).toUpperCase();
-            if (pn) pn.textContent = n.textContent;
-        }
-        if (e && e.textContent !== 'Loading...') {
-            if (pe) pe.textContent = e.textContent;
-        }
-    }, 800);
-});
+
 </script>
 </body>
 </html>
