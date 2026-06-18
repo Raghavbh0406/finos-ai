@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GST Calculator — FinOS AI</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <a href="/subscriptions-page">📱 Subscriptions</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Tools</div>
+    <a href="/sip-calculator-page">📐 SIP Calculator</a>
+    <a href="/loan-calculator-page">🏦 Loan / EMI</a>
+    <a href="/tax-calculator-page">🧾 Tax Calculator</a>
+    <a href="/retirement-calculator-page">👴 Retirement</a>
+    <a href="/capital-gains-page">📉 Capital Gains</a>
+    <a href="/gst-calculator-page" class="active">🧾 GST Calculator</a>
+    <a href="/insurance-page">🛡️ Insurance</a>
+    <a href="/tax-advisor-page">💡 Tax Advisor</a>
+    <a href="/portfolio-page">📊 Portfolio</a>
+    <a href="/reports-page">📋 Reports</a>
+    <a href="/forecast-page">🔮 Forecast</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
+</div>
+
+<div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">GST Calculator</div>
+            <div class="page-subtitle">Calculate GST for any amount and rate</div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="card">
+            <div class="card-title">🧾 GST Details</div>
+            <div class="form-field" style="margin-bottom:16px;">
+                <label>Amount (₹)</label>
+                <input type="number" id="gstAmount" placeholder="e.g. 10000" oninput="calculateGST()">
+            </div>
+            <div class="form-field" style="margin-bottom:16px;">
+                <label>GST Rate</label>
+                <select id="gstRate" onchange="calculateGST()">
+                    <option value="5">5% — Essential goods (food, medicines)</option>
+                    <option value="12">12% — Standard goods</option>
+                    <option value="18" selected>18% — Most services & goods</option>
+                    <option value="28">28% — Luxury goods & sin tax</option>
+                </select>
+            </div>
+            <div class="form-field" style="margin-bottom:24px;">
+                <label>Calculation Type</label>
+                <select id="gstType" onchange="calculateGST()">
+                    <option value="exclusive">Exclusive (Add GST to amount)</option>
+                    <option value="inclusive">Inclusive (Extract GST from amount)</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="calculateGST()">Calculate GST</button>
+
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid #f1f5f9;">
+                <div style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:10px;">GST Slab Quick Reference</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;color:#16a34a;">5%</div><div style="font-size:11px;color:#64748b;">Essentials</div></div>
+                    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;color:#2563eb;">12%</div><div style="font-size:11px;color:#64748b;">Standard</div></div>
+                    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;color:#d97706;">18%</div><div style="font-size:11px;color:#64748b;">Services</div></div>
+                    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:16px;font-weight:700;color:#dc2626;">28%</div><div style="font-size:11px;color:#64748b;">Luxury</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="stat-grid" style="grid-template-columns:1fr;gap:12px;margin-bottom:16px;">
+                <div class="stat-card" style="border-left:4px solid #64748b;"><div class="stat-label">Base Amount</div><div class="stat-value" id="resBase">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #f59e0b;"><div class="stat-label">CGST (50%)</div><div class="stat-value" id="resCGST">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #f59e0b;"><div class="stat-label">SGST (50%)</div><div class="stat-value" id="resSGST">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #ef4444;"><div class="stat-label">Total GST</div><div class="stat-value negative" id="resGST">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #2563eb;"><div class="stat-label">Total Amount</div><div class="stat-value blue" id="resTotal" style="font-size:24px;">₹0</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/ui.js"></script>
+<script src="/js/gst-calculator.js"></script>
+<script>
+function toggleSidebar() { document.getElementById("sidebar").classList.toggle("open"); document.getElementById("sidebarOverlay").classList.toggle("active"); }
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
+</script>
+</body>
+</html>

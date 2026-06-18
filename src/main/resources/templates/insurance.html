@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Insurance Planner — FinOS AI</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <a href="/subscriptions-page">📱 Subscriptions</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Tools</div>
+    <a href="/sip-calculator-page">📐 SIP Calculator</a>
+    <a href="/loan-calculator-page">🏦 Loan / EMI</a>
+    <a href="/tax-calculator-page">🧾 Tax Calculator</a>
+    <a href="/retirement-calculator-page">👴 Retirement</a>
+    <a href="/capital-gains-page">📉 Capital Gains</a>
+    <a href="/gst-calculator-page">🧾 GST Calculator</a>
+    <a href="/insurance-page" class="active">🛡️ Insurance</a>
+    <a href="/tax-advisor-page">💡 Tax Advisor</a>
+    <a href="/portfolio-page">📊 Portfolio</a>
+    <a href="/reports-page">📋 Reports</a>
+    <a href="/forecast-page">🔮 Forecast</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
+</div>
+
+<div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Insurance Planner</div>
+            <div class="page-subtitle">Get personalised insurance coverage recommendations</div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="card">
+            <div class="card-title">🛡️ Your Details</div>
+            <div class="form-field" style="margin-bottom:16px;">
+                <label>Annual Income (₹)</label>
+                <input type="number" id="annualIncome" placeholder="e.g. 1200000" oninput="calculate()">
+            </div>
+            <div class="form-field" style="margin-bottom:24px;">
+                <label>Your Age</label>
+                <input type="number" id="age" placeholder="e.g. 30" oninput="calculate()">
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="calculate()">Get Recommendations</button>
+
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid #f1f5f9;">
+                <div style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:10px;">Why Insurance Matters</div>
+                <div style="font-size:13px;color:#64748b;line-height:1.8;">
+                    <div>🏥 Health insurance covers hospitalisation costs</div>
+                    <div>👨‍👩‍👧 Life cover protects your family's future</div>
+                    <div>🛡️ Emergency fund handles unexpected expenses</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="resultsPanel" style="display:none;">
+            <div class="stat-grid" style="grid-template-columns:1fr;gap:12px;margin-bottom:16px;">
+                <div class="stat-card" style="border-left:4px solid #2563eb;"><div class="stat-label">Recommended Life Cover</div><div class="stat-value blue" id="resLife">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #16a34a;"><div class="stat-label">Recommended Health Cover</div><div class="stat-value positive" id="resHealth">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #f59e0b;"><div class="stat-label">Emergency Fund Target</div><div class="stat-value" id="resEmergency">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #8b5cf6;"><div class="stat-label">Risk Profile</div><div class="stat-value" id="resRisk" style="font-size:18px;">—</div></div>
+            </div>
+
+            <div class="card" style="padding:16px;" id="adviceCard">
+                <div class="card-title">💡 Personalised Advice</div>
+                <div id="adviceList"></div>
+            </div>
+        </div>
+
+        <div id="emptyPanel" class="card" style="display:flex;align-items:center;justify-content:center;min-height:200px;">
+            <div style="text-align:center;color:#64748b;">
+                <div style="font-size:40px;margin-bottom:12px;">🛡️</div>
+                <div style="font-size:15px;font-weight:600;color:#0f172a;">Enter your details</div>
+                <div style="font-size:13px;">to get insurance recommendations</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/ui.js"></script>
+<script src="/js/insurance.js"></script>
+<script>
+function toggleSidebar() { document.getElementById("sidebar").classList.toggle("open"); document.getElementById("sidebarOverlay").classList.toggle("active"); }
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
+</script>
+</body>
+</html>

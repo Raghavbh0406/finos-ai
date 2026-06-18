@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Capital Gains — FinOS AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon">💰</div><span class="sidebar-brand-name">FinOS AI</span></div>
+    <div class="sidebar-section-label">Main</div>
+    <a href="/dashboard-page">📊 Dashboard</a>
+    <a href="/income-page">💰 Income</a>
+    <a href="/expenses-page">💸 Expenses</a>
+    <a href="/budgets-page">📋 Budgets</a>
+    <a href="/investments-page">📈 Investments</a>
+    <a href="/savings-page">🎯 Savings Goals</a>
+    <a href="/subscriptions-page">📱 Subscriptions</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Tools</div>
+    <a href="/sip-calculator-page">📐 SIP Calculator</a>
+    <a href="/loan-calculator-page">🏦 Loan / EMI</a>
+    <a href="/tax-calculator-page">🧾 Tax Calculator</a>
+    <a href="/retirement-calculator-page">👴 Retirement</a>
+    <a href="/capital-gains-page" class="active">📉 Capital Gains</a>
+    <a href="/gst-calculator-page">🧾 GST Calculator</a>
+    <a href="/insurance-page">🛡️ Insurance</a>
+    <a href="/tax-advisor-page">💡 Tax Advisor</a>
+    <a href="/portfolio-page">📊 Portfolio</a>
+    <a href="/reports-page">📋 Reports</a>
+    <a href="/forecast-page">🔮 Forecast</a>
+    <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+    <a href="/profile-page">👤 Profile</a>
+    <a href="/change-password-page">🔐 Change Password</a>
+    <div class="sidebar-spacer"></div>
+    <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
+</div>
+
+<div class="main-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Capital Gains Calculator</div>
+            <div class="page-subtitle">Calculate tax on your stock and asset profits</div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="card">
+            <div class="card-title">📉 Enter Trade Details</div>
+            <div class="form-field" style="margin-bottom:16px;">
+                <label>Purchase Price (₹)</label>
+                <input type="number" id="purchasePrice" placeholder="e.g. 50000" oninput="calculate()">
+            </div>
+            <div class="form-field" style="margin-bottom:16px;">
+                <label>Selling Price (₹)</label>
+                <input type="number" id="sellingPrice" placeholder="e.g. 75000" oninput="calculate()">
+            </div>
+            <div class="form-field" style="margin-bottom:24px;">
+                <label>Holding Period</label>
+                <select id="holdingPeriod" onchange="calculate()">
+                    <option value="short">Short Term (less than 1 year) — 20% tax</option>
+                    <option value="long">Long Term (more than 1 year) — 12.5% tax</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="calculate()">Calculate Gains</button>
+
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid #f1f5f9;">
+                <div style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:10px;">Tax Rates (India 2024-25)</div>
+                <div style="font-size:13px;color:#374151;line-height:2;">
+                    <div style="display:flex;justify-content:space-between;"><span>Short Term Capital Gains</span><span style="font-weight:700;color:#ef4444;">20%</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>Long Term Capital Gains</span><span style="font-weight:700;color:#f59e0b;">12.5%</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>LTCG Exemption Limit</span><span style="font-weight:700;color:#16a34a;">₹1.25L/year</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="stat-grid" style="grid-template-columns:1fr;gap:12px;margin-bottom:16px;">
+                <div class="stat-card" style="border-left:4px solid #64748b;"><div class="stat-label">Purchase Price</div><div class="stat-value" id="resPurchase">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #2563eb;"><div class="stat-label">Selling Price</div><div class="stat-value" id="resSelling">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #16a34a;"><div class="stat-label">Capital Gain / Loss</div><div class="stat-value" id="resGain">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #ef4444;"><div class="stat-label">Estimated Tax</div><div class="stat-value negative" id="resTax">₹0</div></div>
+                <div class="stat-card" style="border-left:4px solid #8b5cf6;"><div class="stat-label">Net Profit After Tax</div><div class="stat-value blue" id="resNet" style="font-size:24px;">₹0</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📊 Gain vs Tax Breakdown</div>
+        <div class="chart-container"><canvas id="gainsChart"></canvas></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;">
+        <div class="card" style="padding:16px;"><div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">💡 LTCG Exemption</div><div style="font-size:13px;color:#64748b;line-height:1.6;">Long term gains up to ₹1.25 lakh per year are exempt from tax. Plan your sales accordingly.</div></div>
+        <div class="card" style="padding:16px;"><div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">📅 Holding Tip</div><div style="font-size:13px;color:#64748b;line-height:1.6;">Holding equity for more than 1 year reduces your tax rate from 20% to 12.5%. Time your exits wisely.</div></div>
+        <div class="card" style="padding:16px;"><div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">📉 Loss Harvesting</div><div style="font-size:13px;color:#64748b;line-height:1.6;">Capital losses can be set off against capital gains in the same year to reduce your tax liability.</div></div>
+    </div>
+</div>
+
+<script src="/js/ui.js"></script>
+<script src="/js/capital-gains.js"></script>
+<script>
+function toggleSidebar() { document.getElementById("sidebar").classList.toggle("open"); document.getElementById("sidebarOverlay").classList.toggle("active"); }
+function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
+</script>
+</body>
+</html>

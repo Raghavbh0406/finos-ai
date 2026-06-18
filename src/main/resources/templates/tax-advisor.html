@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Change Password — FinOS AI</title>
+    <title>Tax Advisor — FinOS AI</title>
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
@@ -25,13 +25,13 @@
     <a href="/capital-gains-page">📉 Capital Gains</a>
     <a href="/gst-calculator-page">🧾 GST Calculator</a>
     <a href="/insurance-page">🛡️ Insurance</a>
-    <a href="/tax-advisor-page">💡 Tax Advisor</a>
+    <a href="/tax-advisor-page" class="active">💡 Tax Advisor</a>
     <a href="/portfolio-page">📊 Portfolio</a>
     <a href="/reports-page">📋 Reports</a>
     <a href="/forecast-page">🔮 Forecast</a>
     <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
     <a href="/profile-page">👤 Profile</a>
-    <a href="/change-password-page" class="active">🔐 Change Password</a>
+    <a href="/change-password-page">🔐 Change Password</a>
     <div class="sidebar-spacer"></div>
     <button class="sidebar-logout" onclick="logout()">⬅ Logout</button>
 </div>
@@ -39,44 +39,49 @@
 <div class="main-content">
     <div class="page-header">
         <div>
-            <div class="page-title">Change Password</div>
-            <div class="page-subtitle">Keep your account secure</div>
+            <div class="page-title">Tax Advisor</div>
+            <div class="page-subtitle">Personalised tax saving recommendations based on your income</div>
         </div>
     </div>
 
-    <div class="card" style="max-width:460px;">
-        <div class="card-title">🔐 Update Password</div>
-
-        <!-- Inline feedback (always visible fallback) -->
-        <div id="feedbackMsg" style="display:none;padding:12px 14px;border-radius:8px;font-size:14px;font-weight:500;margin-bottom:16px;"></div>
-
-        <div class="form-field" style="margin-bottom:14px;">
-            <label>Current Password</label>
-            <div class="input-wrapper">
-                <input type="password" id="oldPassword" placeholder="Enter current password">
-                <button class="toggle-btn" type="button" onclick="toggleOldPassword()">👁</button>
+    <div class="card" style="max-width:500px;margin-bottom:20px;">
+        <div class="card-title">💡 Enter Your Income</div>
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Annual Income (₹)</label>
+                <input type="number" id="advisorIncome" placeholder="e.g. 1200000">
+            </div>
+            <div class="form-field" style="align-self:end;">
+                <button class="btn btn-primary" onclick="getAdvice()">Get Advice</button>
             </div>
         </div>
+    </div>
 
-        <div class="form-field" style="margin-bottom:20px;">
-            <label>New Password</label>
-            <div class="input-wrapper">
-                <input type="password" id="newPassword" placeholder="Enter new password">
-                <button class="toggle-btn" type="button" onclick="toggleNewPassword()">👁</button>
-            </div>
+    <!-- Backend advice -->
+    <div id="backendAdvice" style="display:none;" class="card">
+        <div class="card-title">🤖 Tax Saving Recommendation</div>
+        <div id="backendAdviceText" style="font-size:15px;color:#374151;line-height:1.7;padding:8px 0;"></div>
+    </div>
+
+    <!-- Detailed advice cards -->
+    <div id="adviceGrid" style="display:none;">
+        <div style="font-size:16px;font-weight:700;color:#0f172a;margin-bottom:16px;">📋 Detailed Tax Saving Strategies</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;" id="adviceCards"></div>
+    </div>
+
+    <!-- Tax saving summary -->
+    <div id="savingSummary" style="display:none;margin-top:20px;">
+        <div class="card">
+            <div class="card-title">💰 Potential Tax Savings</div>
+            <div id="savingItems"></div>
         </div>
-
-        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="changePassword()">Update Password</button>
     </div>
 </div>
 
 <script src="/js/ui.js"></script>
-<script src="/js/change-password.js"></script>
+<script src="/js/tax-advisor.js"></script>
 <script>
-function toggleSidebar() {
-    document.getElementById("sidebar").classList.toggle("open");
-    document.getElementById("sidebarOverlay").classList.toggle("active");
-}
+function toggleSidebar() { document.getElementById("sidebar").classList.toggle("open"); document.getElementById("sidebarOverlay").classList.toggle("active"); }
 function logout() { localStorage.removeItem("token"); window.location.href = "/"; }
 </script>
 </body>
