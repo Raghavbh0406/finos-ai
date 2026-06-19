@@ -194,7 +194,10 @@ function logout() {
     localStorage.removeItem("token");
     window.location.href = "/";
 }
-document.addEventListener("DOMContentLoaded", () => { loadGreeting(); setTimeout(loadStreak, 500); loadForecastBanner(); });
+window.addEventListener("load", () => {
+    if (typeof loadStreak === "function") setTimeout(loadStreak, 600);
+    if (typeof loadForecastBanner === "function") setTimeout(loadForecastBanner, 800);
+});
 
 async function loadForecastBanner() {
     const token = localStorage.getItem("token");

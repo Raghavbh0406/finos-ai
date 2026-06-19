@@ -1,4 +1,7 @@
-document.addEventListener("DOMContentLoaded", loadDashboard);
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof loadGreeting === "function") loadGreeting();
+    loadDashboard();
+});
 
 async function loadDashboard() {
     const token = localStorage.getItem("token");
