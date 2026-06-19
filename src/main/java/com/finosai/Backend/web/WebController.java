@@ -1,11 +1,8 @@
 package com.finosai.Backend.web;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
 @Controller
 public class WebController {
-
 @GetMapping("/") public String login() { return "login"; }
 @GetMapping("/register") public String register() { return "register"; }
 @GetMapping("/dashboard-page") public String dashboard() { return "dashboard"; }
@@ -28,6 +25,4 @@ public class WebController {
 @GetMapping("/insurance-page") public String insurance() { return "insurance"; }
 @GetMapping("/tax-advisor-page") public String taxAdvisor() { return "tax-advisor"; }
 @GetMapping("/portfolio-page") public String portfolio() { return "portfolio"; }
-
-
 }
